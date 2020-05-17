@@ -111,7 +111,7 @@ db.prescription.belongsToMany(db.medicament, { through: "medicament_prescription
   sync and seed
  */
 
-//db.sequelize.sync({ force: true }).then(() => {seed();});
+// db.sequelize.sync({ force: true }).then(() => {seed();});
 
 async function seed() {
   await db.speciality.create({
@@ -129,15 +129,6 @@ async function seed() {
     isActive: 1
   });
 
-  await db.user.create({
-    id: 2,
-    is: "patient",
-    permissions: "",
-    username: "patient",
-    password: bcrypt.hashSync("123456", 8),
-    mobile: "0510000000",
-    isActive: 1
-  });
 
   // clinic
   const clinic = await db.clinic.create({
@@ -154,17 +145,6 @@ async function seed() {
     isAdmin: 1,
   });
 
-  const patient = await db.patient.create({
-    id: 1,
-    userId: 2,
-  })
-  await clinic.addPatients(patient)
-  await db.appointment.create({
-    patientId: 1,
-    clinicId: 1,
-    doctorId: 1,
-    status: 1,
-  })
   // type: Sequelize.INTEGER // 0: text, 1: number, 2: date, 3: boolean, 4: list
   await db.healthParameterCategory.create({
     id: 1,

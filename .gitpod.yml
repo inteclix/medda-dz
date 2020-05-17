@@ -1,6 +1,5 @@
 tasks:
   - init: cd backend && yarn install
-  - init: cd .. && cd frontend && yarn install
-    command: yarn run start
+  - init: cd frontend && yarn install
 image:
   file: .gitpod.Dockerfile

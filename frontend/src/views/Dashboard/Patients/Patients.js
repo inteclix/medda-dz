@@ -4,6 +4,8 @@ import RoutesBuilder from "components/RoutesBuilder";
 import List from "./List";
 import Add from "./Add";
 import Edit from "./Edit";
+import AddConsulation from "./AddConsulation";
+import EditConsulation from "./EditConsulation";
 
 const routes = [
   {
@@ -19,6 +21,16 @@ const routes = [
   {
     component: Edit,
     path: "/patients/edit/:id",
+    exact: true,
+  },
+  {
+    component: AddConsulation,
+    path: "/patients/:id/consultations/add",
+    exact: true,
+  },
+  {
+    component: AddConsulation,
+    path: "/patients/:id/consultations/edit",
     exact: true,
   }
 ];

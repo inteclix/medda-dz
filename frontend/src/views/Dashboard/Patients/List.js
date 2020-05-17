@@ -92,7 +92,7 @@ const List = () => {
       </div>
       <div className={classes.content}>
         <MaterialTable
-          title="Patient list"
+          title="Liste des patients"
           isLoading={isLoading}
           columns={columns}
           data={appointments}
@@ -108,7 +108,7 @@ const List = () => {
           }}
           onRowClick={(evt, selectedRow) => setSelectedRow(selectedRow)}
           detailPanel={(rowData) => {
-            return <PatientConsultations id={rowData.tableData.id}/>
+            return <PatientConsultations id={rowData.id}/>
           }}
           actions={[
             {
@@ -119,9 +119,9 @@ const List = () => {
             },
             (rowData) => ({
               icon: AssignmentIcon,
-              tooltip: "Medical consultation",
+              tooltip: "Ajouter consultation",
               onClick: (event, rowData) =>
-                history.push(`/consultations/add/${rowData.id}`),
+                history.push(`/patients/${rowData.id}/consultations/add`),
               //disabled: rowData.birthYear < 2000
             }),
           ]}

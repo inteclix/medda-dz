@@ -1,7 +1,7 @@
 const db = require("../models");
 
 exports.isDoctor = async (req, res, next) => {
-  if (req.user.role !== "doctor") {
+  if (req.user.is !== "doctor") {
     return res.status(401).send({
       message: "Un autorization",
     });
