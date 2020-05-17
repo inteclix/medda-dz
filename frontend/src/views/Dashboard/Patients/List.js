@@ -108,7 +108,7 @@ const List = () => {
           }}
           onRowClick={(evt, selectedRow) => setSelectedRow(selectedRow)}
           detailPanel={(rowData) => {
-            return <PatientConsultations id={rowData.id}/>
+            return <PatientConsultations key={rowData.id} id={rowData.id}/>
           }}
           actions={[
             {

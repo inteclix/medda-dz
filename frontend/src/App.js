@@ -23,7 +23,7 @@ function App() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [user, setUser] = useState(null);
   const { api, token, setToken } = useApi();
-  window.setToken = setToken
+  window.api = api
   useEffect(() => {
     setIsLoadingUser(true);
     api

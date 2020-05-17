@@ -29,8 +29,8 @@ const routes = [
     exact: true,
   },
   {
-    component: AddConsulation,
-    path: "/patients/:id/consultations/edit",
+    component: EditConsulation,
+    path: "/patients/:id/consultations/:consultationId/edit",
     exact: true,
   }
 ];

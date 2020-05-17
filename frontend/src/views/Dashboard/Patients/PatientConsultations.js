@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/styles";
 import {
   Button,
   Typography,
@@ -13,6 +12,7 @@ import {
   IconButton,
   Avatar,
   Divider,
+  makeStyles
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
@@ -42,7 +42,7 @@ const PatientConsultations = ({ id }) => {
   const [consultations, setConsultations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
-
+  const history = useHistory();
   useEffect(() => {
     api
       .get(`patients/${id}/consultations`)
@@ -97,14 +97,14 @@ const PatientConsultations = ({ id }) => {
               </Box>
             }
             secondary={`Le ${moment(c.createdAt).format(
-              "dddd, MMMM Do YYYY, h:mm:ss a"
+              "DD/MM/YYYY, h:mm:ss a"
             )}`}
           />
           <ListItemSecondaryAction>
             <IconButton edge="end" aria-label="delete">
               <DeleteIcon />
             </IconButton>
-            <IconButton style={{ marginLeft: ".5em" }} aria-label="edit">
+            <IconButton onClick={()=> history.push(`/patients/${id}/consultations/${c.id}/edit`)} style={{ marginLeft: ".5em" }} aria-label="edit">
               <VisibilityIcon />
             </IconButton>
           </ListItemSecondaryAction>

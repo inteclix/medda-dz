@@ -13,7 +13,7 @@ import {
   Paper,
   makeStyles,
 } from "@material-ui/core";
-import {SingleSelect} from 'react-select-material-ui';
+import { SingleSelect } from "react-select-material-ui";
 import {
   DatePicker,
   KeyboardDatePicker,
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({}));
 
 export const renderFields = (form, control, errors, row) => {
   return form.map((field, index) => {
-    if(field.type === "component"){
-      return field.component
+    if (field.type === "component") {
+      return field.component;
     }
     if (
       field.type === "text" ||
@@ -42,7 +42,7 @@ export const renderFields = (form, control, errors, row) => {
           key={index}
           margin="normal"
           error={Boolean(errors[field.name])}
-          style={{margin: 10}}
+          style={{ margin: 10 }}
         >
           <Controller
             as={TextField}
@@ -51,8 +51,8 @@ export const renderFields = (form, control, errors, row) => {
             required={field.rules ? true : false}
             name={field.name ? field.name : field.code}
             defaultValue={row ? row[field.name] : ""}
-            label={field.placeholder}
-            style={{ width: 280, ...field.style  }}
+            label={field.placeholder ? field.placeholder : field.label}
+            style={{ width: 280, ...field.style }}
             rules={field.rules}
           />
           <FormHelperText>
@@ -66,7 +66,7 @@ export const renderFields = (form, control, errors, row) => {
         <FormControl
           key={index}
           margin="normal"
-          style={{margin: 10}}
+          style={{ margin: 10 }}
           error={Boolean(errors[field.name])}
         >
           <Controller
@@ -77,7 +77,7 @@ export const renderFields = (form, control, errors, row) => {
             name={field.name ? field.name : field.code}
             defaultValue={row ? row[field.name] : ""}
             label={field.placeholder}
-            style={{ width: 280, ...field.style  }}
+            style={{ width: 280, ...field.style }}
             rules={field.rules}
           />
           <FormHelperText>
@@ -91,7 +91,7 @@ export const renderFields = (form, control, errors, row) => {
         <FormControl
           key={index}
           margin="normal"
-          style={{margin: 10}}
+          style={{ margin: 10 }}
           error={Boolean(errors[field.name])}
         >
           <Controller
@@ -100,7 +100,7 @@ export const renderFields = (form, control, errors, row) => {
             control={control}
             required={field.rules ? true : false}
             name={field.name}
-            style={{ width: 280, ...field.style  }}
+            style={{ width: 280, ...field.style }}
             defaultValue={row ? row[field.name] : new Date()}
             label={field.placeholder}
             rules={field.rules}
@@ -118,9 +118,10 @@ export const renderFields = (form, control, errors, row) => {
       return (
         <FormControl
           margin="normal"
-          style={{margin: 10}}
+          style={{ margin: 10 }}
           error={Boolean(errors[field.name])}
-          key={index}>
+          key={index}
+        >
           <Controller
             as={SingleSelect}
             name={field.name}
@@ -128,7 +129,7 @@ export const renderFields = (form, control, errors, row) => {
             rules={field.rules}
             control={control}
             options={field.options}
-            style={{ width: 280, ...field.style  }}
+            style={{ width: 280, ...field.style }}
             label={field.placeholder}
           />
           <FormHelperText>
@@ -139,8 +140,7 @@ export const renderFields = (form, control, errors, row) => {
     }
     if (field.type === "boolean") {
       return (
-          
-        <FormControl style={{margin: 10}} margin="normal" key={index}>
+        <FormControl style={{ margin: 10 }} margin="normal" key={index}>
           <FormControlLabel
             control={
               <Controller
@@ -169,18 +169,19 @@ export default ({
   extraFieldsTop,
   extraFieldsBottom,
 }) => {
-  const { handleSubmit, control, errors } = useForm();
-
+  const { handleSubmit, control, errors, formState } = useForm();
   return (
     <>
       {extraFieldsTop && extraFieldsTop(control, errors)}
       {renderFields(form, control, errors, row)}
       {extraFieldsBottom && extraFieldsBottom(control, errors)}
       <Button
-        style={{width: "calc(100% - 20px)",margin: 10}}
+        style={{ width: "calc(100% - 20px)", margin: 10 }}
         onClick={handleSubmit(onSubmit)}
         color="primary"
-        disabled={Boolean(isLoading)}
+        disabled={
+          Boolean(isLoading) || Object.keys(formState.touched).length === 0
+        }
         variant="outlined"
       >
         {submitText ? submitText : "OK"}

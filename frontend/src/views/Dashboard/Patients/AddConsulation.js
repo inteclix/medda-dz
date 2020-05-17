@@ -1,18 +1,31 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link as RouterLink, useHistory, useRouteMatch } from "react-router-dom";
+import {
+  Link as RouterLink,
+  useHistory,
+  useRouteMatch,
+} from "react-router-dom";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
 import Form, { renderFields } from "components/Form";
-import { Paper, Typography, Box, TextField, FormHelperText, FormControl, makeStyles, LinearProgress } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab"
+import {
+  Paper,
+  Typography,
+  Box,
+  TextField,
+  FormHelperText,
+  FormControl,
+  makeStyles,
+  LinearProgress,
+} from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { Controller } from "react-hook-form";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   healthParameter: {
     padding: theme.spacing(2),
-  }
+  },
 }));
 
 export default (props) => {
@@ -20,11 +33,11 @@ export default (props) => {
   const history = useHistory();
   const { api } = useAppStore();
   const { enqueueSnackbar } = useSnackbar();
-  const [parameters, setParameters] = useState([])
-  const [parameterOptions, setParameterOptions] = useState([])
-  const [patient, setPatient] = useState(null)
-  const { params } = useRouteMatch()
-  const classes = useStyles()
+  const [parameters, setParameters] = useState([]);
+  const [parameterOptions, setParameterOptions] = useState([]);
+  const [patient, setPatient] = useState(null);
+  const { params } = useRouteMatch();
+  const classes = useStyles();
   const rowForm = [
     {
       name: "motifs",
@@ -78,114 +91,125 @@ export default (props) => {
             name: "_id" + p.id,
             placeholder: p.label,
             categoryName: p.health_parameter_category.name,
-            options: p.health_parameter_options ? p.health_parameter_options.map((o) => o.name) : []
-          }
-        })
-        setParameterOptions(fetchedParamaterOptions)
-      })
+            options: p.health_parameter_options
+              ? p.health_parameter_options.map((o) => o.name)
+              : [],
+          };
+        });
+        setParameterOptions(fetchedParamaterOptions);
+      });
 
-      await api.get(`/patients/${params.id}`)
+      await api
+        .get(`/patients/${params.id}`)
         .then(({ data }) => {
-          setPatient(data)
-          setIsLoading(false)
+          setPatient(data);
+          setIsLoading(false);
         })
         .catch((err) => {
-          const message = err ?.response ?.data ?.message || '' + err;
+          const message = err?.response?.data?.message || "" + err;
           enqueueSnackbar(message, {
-            variant: 'error'
+            variant: "error",
           });
           //setIsLoading(false);
-        })
-    }
-    load()
-  }, [])
+        });
+    };
+    load();
+  }, []);
 
-  const onSubmit = data => {
-    let healthParameters = []
-    let id
-    let value
+  const onSubmit = (data) => {
+    let healthParameters = [];
+    let id;
+    let value;
     Object.keys(data).map((key) => {
       if (key.startsWith("_id")) {
-        id = key.slice(3)
-        value = data[key]
-        healthParameters.push({ healthParameterId: id, value: value })
-        delete data[key]
+        id = key.slice(3);
+        value = data[key];
+        healthParameters.push({ healthParameterId: id, value: value });
+        delete data[key];
       }
-    })
-    data["healthParameters"] = healthParameters
-    data["patientId"] = patient.id
-    api.post("consultations", data)
-      .then(() => {
-        const message = 'Consultation est enregister avec success';
+    });
+    data["healthParameters"] = healthParameters;
+    data["patientId"] = patient.id;
+    api
+      .post("consultations", data)
+      .then(({ data }) => {
+        const message = "Consultation est enregister avec success";
         enqueueSnackbar(message, {
-          variant: 'success'
+          variant: "success",
         });
         setIsLoading(false);
-        history.push(`/patients/${patient.id}/consultations/edit`)
+        history.push(`/patients/${patient.id}/consultations/${data.id}/edit`);
       })
-      .catch(err => {
-        const message = err ?.response ?.data ?.message || '' + err;
+      .catch((err) => {
+        const message = err?.response?.data?.message || "" + err;
         enqueueSnackbar(message, {
-          variant: 'error'
+          variant: "error",
         });
         setIsLoading(false);
       });
-
   };
 
   const getType = (t) => {
     if (t === 0) {
-      return "text"
+      return "text";
     }
     if (t === 1) {
-      return "number"
+      return "number";
     }
     if (t === 2) {
-      return "date"
+      return "date";
     }
     if (t === 3) {
-      return "boolean"
+      return "boolean";
     }
     if (t === 4) {
-      return "list"
+      return "list";
     }
-  }
+  };
 
   const renderParameters = (control, errors) => {
     if (parameters) {
-      return (
-        parameters.map((paramater, index) => {
-          return (
-            <FormControl
-              key={index}
-              fullWidth
-              margin="normal"
-              error={Boolean(errors["f" + paramater.id])}>
-              <Controller
-                as={TextField}
-                type={getType(paramater.type)}
-                control={control}
-                name={"f" + paramater.id}
-                label={paramater.name}
-              />
-              <FormHelperText>
-                {errors["f" + paramater.id] && errors["f" + paramater.id].message}
-              </FormHelperText>
-            </FormControl>
-          )
-        })
-      )
+      return parameters.map((paramater, index) => {
+        return (
+          <FormControl
+            key={index}
+            fullWidth
+            margin="normal"
+            error={Boolean(errors["f" + paramater.id])}
+          >
+            <Controller
+              as={TextField}
+              type={getType(paramater.type)}
+              control={control}
+              name={"f" + paramater.id}
+              label={paramater.name}
+            />
+            <FormHelperText>
+              {errors["f" + paramater.id] && errors["f" + paramater.id].message}
+            </FormHelperText>
+          </FormControl>
+        );
+      });
     }
-  }
-  
+  };
+
   if (isLoading) {
-    return (
-      <LinearProgress />
-    )
+    return <LinearProgress />;
   }
   return (
-    <Paper style={{ padding: 10 }} display="flex" flexDirection="column" component={Box}>
-      <Typography variant="h6">Nouvelle consultations pour: {patient && patient ?.user ?.firstname + " " + patient ?.user ?.lastname}</Typography>
+    <Paper
+      style={{ padding: 10 }}
+      display="flex"
+      flexDirection="column"
+      component={Box}
+    >
+      <Typography variant="h6">
+        Nouvelle consultations pour:{" "}
+        {patient &&
+          patient?.user?.firstname?.toUpperCase() +
+            " " +
+            patient?.user?.lastname?.toUpperCase()}
+      </Typography>
       <Box component="form">
         <Form
           form={rowForm}
@@ -204,14 +228,24 @@ export default (props) => {
                   options={parameterOptions}
                   getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
-                    <TextField {...params} label="Paramaters de santé" placeholder="Paramaters de santé" />
+                    <TextField
+                      {...params}
+                      label="Paramaters de santé"
+                      placeholder="Paramaters de santé"
+                    />
                   )}
                 />
-                {
-                  renderFields(parameters, control, errors)
-                }
+                <Paper style={{ marginTop: 20, padding: 10 }}>
+                  {parameters.length !== 0 &&
+                    renderFields(parameters, control, errors)}
+                  {parameters.length === 0 && (
+                    <Typography>
+                      Sélectionner un ou plusieur paramètres de santé
+                    </Typography>
+                  )}
+                </Paper>
               </Paper>
-            )
+            );
           }}
         />
       </Box>

@@ -104,7 +104,6 @@ exports.create = async (req, res) => {
   }
 }
 
-
 exports.getConsultations = async (req, res) => {
   const id = req.params.id
   const patient = await db.patient.findByPk(id, {
