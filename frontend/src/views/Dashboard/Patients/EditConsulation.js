@@ -1,10 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Link as RouterLink,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
@@ -14,13 +9,10 @@ import {
   Typography,
   Box,
   TextField,
-  FormHelperText,
-  FormControl,
   makeStyles,
   LinearProgress,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { Controller } from "react-hook-form";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const history = useHistory();
   const { api } = useAppStore();
   const { enqueueSnackbar } = useSnackbar();
   const [parameters, setParameters] = useState([]);
@@ -200,10 +191,8 @@ export default (props) => {
     >
       <Typography variant="h6">
         Consultations (
-        {`${moment(consultation.createdAt).format(
-          "DD/MM/YYYY, h:mm:ss a"
-        )}`}
-        ) pour:{" "}
+        {`${moment(consultation.createdAt).format("DD/MM/YYYY, h:mm:ss a")}`})
+        pour:{" "}
         {consultation &&
           consultation?.patient?.user?.firstname +
             " " +
@@ -221,6 +210,9 @@ export default (props) => {
                   multiple
                   onChange={(event, values) => setParameters(values)}
                   filterSelectedOptions
+                  getOptionSelected={(option, value) =>
+                    option.name === value.name
+                  }
                   size="small"
                   limitTags={3}
                   id="multiple-limit-tags"

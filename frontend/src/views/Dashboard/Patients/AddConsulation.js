@@ -1,10 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Link as RouterLink,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
@@ -14,13 +9,10 @@ import {
   Typography,
   Box,
   TextField,
-  FormHelperText,
-  FormControl,
   makeStyles,
   LinearProgress,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { Controller } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   healthParameter: {
@@ -167,32 +159,6 @@ export default (props) => {
     }
   };
 
-  const renderParameters = (control, errors) => {
-    if (parameters) {
-      return parameters.map((paramater, index) => {
-        return (
-          <FormControl
-            key={index}
-            fullWidth
-            margin="normal"
-            error={Boolean(errors["f" + paramater.id])}
-          >
-            <Controller
-              as={TextField}
-              type={getType(paramater.type)}
-              control={control}
-              name={"f" + paramater.id}
-              label={paramater.name}
-            />
-            <FormHelperText>
-              {errors["f" + paramater.id] && errors["f" + paramater.id].message}
-            </FormHelperText>
-          </FormControl>
-        );
-      });
-    }
-  };
-
   if (isLoading) {
     return <LinearProgress />;
   }
@@ -222,6 +188,9 @@ export default (props) => {
                   multiple
                   onChange={(event, values) => setParameters(values)}
                   filterSelectedOptions
+                  getOptionSelected={(option, value) =>
+                    option.name === value.name
+                  }
                   size="small"
                   limitTags={3}
                   id="multiple-limit-tags"

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
@@ -100,7 +99,12 @@ export default (props) => {
   };
 
   return (
-    <Paper style={{ padding: 10 }} display="flex" flexDirection="column" component={Box}>
+    <Paper
+      style={{ padding: 10 }}
+      display="flex"
+      flexDirection="column"
+      component={Box}
+    >
       <Typography variant="h6">Ajouter un patient</Typography>
       <Box component="form">
         <Form

@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link as LinkRouter} from "react-router-dom";
+import { Link as LinkRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import { ThemeProvider, withStyles } from "@material-ui/core/styles";
 import {
@@ -9,7 +9,6 @@ import {
   AppBar,
   Hidden,
   CssBaseline,
-  Menu,
   Button,
   MenuList,
   MenuItem,
@@ -21,14 +20,12 @@ import {
   Popover 
 } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import SendIcon from "@material-ui/icons/Send";
 import MenuIcon from "@material-ui/icons/Menu";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import Navigator from "containers/dashboard/Navigator";
-import Content from "components/Content";
 import Copyright from "components/Copyright";
 
 import DashboardRoutes from "routes/DashboardRoutes";
@@ -68,7 +65,6 @@ const styles = {
 function Dashboard(props) {
   const { classes } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const location = useLocation();
   const { user, setToken } = useAppStore();
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
 

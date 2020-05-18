@@ -1,10 +1,8 @@
-import React, { useEffect, useState, useDebugValue } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
 import utils from "utils";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const [isLoading, setIsloading] = useState(true);
-  const [isAuthorize, setIsAuthorize] = useState(false);
   const [auth, setAuth] = useState({
     isAuth: false,
     isLoading: true,

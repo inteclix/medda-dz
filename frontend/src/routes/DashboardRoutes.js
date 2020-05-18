@@ -5,7 +5,6 @@ import Home from "views/Dashboard/Home";
 import Me from "views/Dashboard/Me";
 import Settings from "views/Dashboard/Settings";
 import Patients from "views/Dashboard/Patients";
-import Consultations from "views/Dashboard/Consultations";
 
 const routes = [
   {
@@ -26,11 +25,6 @@ const routes = [
   {
     component: Patients,
     path: "/patients",
-    exact: false,
-  },
-  {
-    component: Consultations,
-    path: "/consultations",
     exact: false,
   },
   {
