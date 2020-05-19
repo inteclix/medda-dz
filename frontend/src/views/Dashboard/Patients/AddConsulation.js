@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
-import Form, { renderFields } from "components/Form";
+import Form, { renderFields, renderField } from "./Form";
 import {
   Paper,
   Typography,
@@ -11,8 +11,12 @@ import {
   TextField,
   makeStyles,
   LinearProgress,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
   healthParameter: {
@@ -98,7 +102,7 @@ export default (props) => {
           setIsLoading(false);
         })
         .catch((err) => {
-          const message = err?.response?.data?.message || "" + err;
+          const message = err ?.response ?.data ?.message || "" + err;
           enqueueSnackbar(message, {
             variant: "error",
           });
@@ -133,7 +137,7 @@ export default (props) => {
         history.push(`/patients/${patient.id}/consultations/${data.id}/edit`);
       })
       .catch((err) => {
-        const message = err?.response?.data?.message || "" + err;
+        const message = err ?.response ?.data ?.message || "" + err;
         enqueueSnackbar(message, {
           variant: "error",
         });
@@ -172,18 +176,39 @@ export default (props) => {
       <Typography variant="h6">
         Nouvelle consultations pour:{" "}
         {patient &&
-          patient?.user?.firstname?.toUpperCase() +
+          patient ?.user ?.firstname ?.toUpperCase() +
             " " +
-            patient?.user?.lastname?.toUpperCase()}
+            patient ?.user ?.lastname ?.toUpperCase()}
       </Typography>
-      <Box component="form">
-        <Form
-          form={rowForm}
-          onSubmit={onSubmit}
-          isLoading={isLoading}
-          extraFieldsBottom={(control, errors) => {
-            return (
-              <Paper className={classes.healthParameter}>
+      <Form render={(form) => (
+        <>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>Consultation</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Box display="flex" flexWrap="wrap">
+                {rowForm.map((field, index) => (
+                  renderField(field, form, index)
+                ))}
+              </Box>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography className={classes.heading}>Paramaters de santé</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Box flex={1} display="flex" flexDirection="column">
                 <Autocomplete
                   multiple
                   onChange={(event, values) => setParameters(values)}
@@ -199,25 +224,123 @@ export default (props) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Paramaters de santé"
-                      placeholder="Paramaters de santé"
+                      label="Paramaters"
+                      placeholder="Paramaters"
                     />
                   )}
                 />
-                <Paper style={{ marginTop: 20, padding: 10 }}>
-                  {parameters.length !== 0 &&
-                    renderFields(parameters, control, errors)}
+                <Paper style={{ marginTop: 20, padding: 10, display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                  {
+                    parameters.length !== 0 &&
+                    parameters.map((field, index) => (
+                      renderField(field, form, field.name)
+                    ))
+                  }
                   {parameters.length === 0 && (
                     <Typography>
                       Sélectionner un ou plusieur paramètres de santé
-                    </Typography>
+                  </Typography>
                   )}
                 </Paper>
-              </Paper>
-            );
-          }}
-        />
-      </Box>
+              </Box>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel3a-content"
+              id="panel3a-header"
+            >
+              <Typography className={classes.heading}>Disabled Expansion Panel</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Box flex={1} display="flex" flexDirection="column">
+                <Autocomplete
+                  multiple
+                  onChange={(event, values) => setParameters(values)}
+                  filterSelectedOptions
+                  getOptionSelected={(option, value) =>
+                    option.name === value.name
+                  }
+                  size="small"
+                  limitTags={3}
+                  id="multiple-limit-tags"
+                  options={parameterOptions}
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Paramaters"
+                      placeholder="Paramaters"
+                    />
+                  )}
+                />
+                <Paper style={{ marginTop: 20, padding: 10, display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                  {
+                    parameters.length !== 0 &&
+                    parameters.map((field, index) => (
+                      renderField(field, form, field.name)
+                    ))
+                  }
+                  {parameters.length === 0 && (
+                    <Typography>
+                      Sélectionner un ou plusieur paramètres de santé
+                  </Typography>
+                  )}
+                </Paper>
+              </Box>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </>
+      )} />
+
     </Paper>
   );
 };
+
+/*
+<Box component="form">
+  <Form
+    form={rowForm}
+    onSubmit={onSubmit}
+    isLoading={isLoading}
+    extraFieldsBottom={(control, errors) => {
+      return (
+        <Paper className={classes.healthParameter}>
+          <Autocomplete
+            multiple
+            onChange={(event, values) => setParameters(values)}
+            filterSelectedOptions
+            getOptionSelected={(option, value) =>
+              option.name === value.name
+            }
+            size="small"
+            limitTags={3}
+            id="multiple-limit-tags"
+            options={parameterOptions}
+            getOptionLabel={(option) => option.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Paramaters de santé"
+                placeholder="Paramaters de santé"
+              />
+            )}
+          />
+          <Paper style={{ marginTop: 20, padding: 10 }}>
+            {parameters.length !== 0 &&
+              renderFields(parameters, control, errors)}
+            {parameters.length === 0 && (
+              <Typography>
+                Sélectionner un ou plusieur paramètres de santé
+          </Typography>
+            )}
+          </Paper>
+        </Paper>
+      );
+    }}
+  />
+</Box>
+
+
+ */

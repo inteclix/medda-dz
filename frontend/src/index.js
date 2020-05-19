@@ -7,9 +7,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
 
@@ -18,6 +16,6 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-if(module.hot){
+if (module.hot) {
   module.hot.accept()
 }

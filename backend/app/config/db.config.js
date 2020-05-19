@@ -2,7 +2,7 @@ module.exports = {
   HOST: "localhost",
   PORT: "3306",
   USER: "root",
-  PASSWORD: "inteclix0540055010",
+  PASSWORD: "",
   DB: "medical_online",
   dialect: "mysql",
   pool: {
