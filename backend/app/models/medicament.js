@@ -3,14 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     name: {
       type: Sequelize.STRING,
     },
-    posologie: {
+    code: {
       type: Sequelize.STRING,
     },
-    number_unit: {
+    description: {
       type: Sequelize.INTEGER,
-    },
-    qsp: {
-      type: Sequelize.STRING,
     }
   });
 };

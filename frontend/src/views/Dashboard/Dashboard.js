@@ -158,7 +158,7 @@ function Dashboard(props) {
                           Parameters
                         </Typography>
                       </MenuItem>
-                      <MenuItem component={Button} onClick={()=>{setToken("")}}>
+                      <MenuItem  onClick={()=>{setToken("")}}>
                         <ListItemIcon>
                           <ExitToAppIcon fontSize="small" />
                         </ListItemIcon>

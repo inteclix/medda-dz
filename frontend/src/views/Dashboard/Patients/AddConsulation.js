@@ -14,6 +14,7 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
+  Button,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -34,11 +35,12 @@ export default (props) => {
   const [patient, setPatient] = useState(null);
   const { params } = useRouteMatch();
   const classes = useStyles();
-  const rowForm = [
+  const consultationForm = [
     {
       name: "motifs",
       placeholder: "Motifs",
       type: "text",
+      rules: { required: "Ce champ est obligatoire" }
     },
     {
       name: "historique",
@@ -181,8 +183,8 @@ export default (props) => {
             patient ?.user ?.lastname ?.toUpperCase()}
       </Typography>
       <Form render={(form) => (
-        <>
-          <ExpansionPanel>
+        <Box marginTop={1}>
+          <ExpansionPanel expanded>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -192,7 +194,7 @@ export default (props) => {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Box display="flex" flexWrap="wrap">
-                {rowForm.map((field, index) => (
+                {consultationForm.map((field, index) => (
                   renderField(field, form, index)
                 ))}
               </Box>
@@ -251,47 +253,15 @@ export default (props) => {
               aria-controls="panel3a-content"
               id="panel3a-header"
             >
-              <Typography className={classes.heading}>Disabled Expansion Panel</Typography>
+              <Typography className={classes.heading}>Ordonance</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Box flex={1} display="flex" flexDirection="column">
-                <Autocomplete
-                  multiple
-                  onChange={(event, values) => setParameters(values)}
-                  filterSelectedOptions
-                  getOptionSelected={(option, value) =>
-                    option.name === value.name
-                  }
-                  size="small"
-                  limitTags={3}
-                  id="multiple-limit-tags"
-                  options={parameterOptions}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Paramaters"
-                      placeholder="Paramaters"
-                    />
-                  )}
-                />
-                <Paper style={{ marginTop: 20, padding: 10, display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                  {
-                    parameters.length !== 0 &&
-                    parameters.map((field, index) => (
-                      renderField(field, form, field.name)
-                    ))
-                  }
-                  {parameters.length === 0 && (
-                    <Typography>
-                      Sélectionner un ou plusieur paramètres de santé
-                  </Typography>
-                  )}
-                </Paper>
-              </Box>
+                Ordonance              </Box>
             </ExpansionPanelDetails>
           </ExpansionPanel>
-        </>
+          <Button onClick={form.handleSubmit(onSubmit)} fullWidth variant="outlined" color="primary" style={{ marginTop: 10 }}>OK</Button>
+        </Box>
       )} />
 
     </Paper>

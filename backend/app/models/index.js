@@ -102,10 +102,11 @@ db.healthParameter.hasMany(db.healthParameterOption)
 db.healthParameterOption.belongsTo(db.healthParameter)
 db.healthParameter.belongsTo(db.healthParameterCategory)
 db.healthParameterCategory.hasMany(db.healthParameter)
-// prescription
-db.prescription.belongsTo(db.patient)
-db.prescription.belongsTo(db.doctor)
+
+// prescription and medicament
+db.prescription.belongsTo(db.consultation)
 db.prescription.belongsToMany(db.medicament, { through: "medicament_prescription" })
+db.medicament.belongsToMany(db.prescription, { through: "medicament_prescription" })
 
 /*
   sync and seed
@@ -193,6 +194,10 @@ async function seed() {
   await db.healthParameterOption.create({
     name: "option for list",
     healthParameterId: 5
+  })
+
+  await db.medicament.create({
+    name: "doliprane"
   })
 }
 
