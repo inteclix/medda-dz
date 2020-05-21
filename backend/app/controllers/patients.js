@@ -110,7 +110,7 @@ exports.getConsultations = async (req, res) => {
     include:[
       {
         model: db.consultation,
-        include: db.healthParameter
+        include: db.health_parameter
       }
     ]
   })

@@ -1,28 +1,41 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("consultations", {
+  const consultation = sequelize.define("consultations", {
     motifs: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     historique: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     examenClinique: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     examenParaClinique: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     diagnostique: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     traitement: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     examentDemander: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     note: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
   });
+
+  consultation.associate = (models) => {
+    consultation.belongsTo(models.patient);
+    consultation.belongsTo(models.doctor);
+    consultation.belongsToMany(models.health_parameter, {
+      through: "consultation_health_parameters",
+    });
+    consultation.belongsToMany(models.analyse, {
+      through: "analyse_consultation",
+    });
+  };
+
+  return consultation;
 };

@@ -1,7 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("doctors", {
+  const doctor = sequelize.define("doctors", {
     isAdmin: {
-      type: Sequelize.BOOLEAN
-    }
+      type: Sequelize.BOOLEAN,
+    },
   });
+
+  doctor.associate = (models) => {
+    doctor.belongsTo(models.user);
+    doctor.belongsTo(models.speciality);
+    doctor.belongsTo(models.clinic);
+    doctor.hasMany(models.appointment);
+  };
+
+  return doctor
 };

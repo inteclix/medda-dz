@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("medicaments", {
+  const medicament = sequelize.define("medicaments", {
     name: {
       type: Sequelize.STRING,
     },
@@ -8,6 +8,14 @@ module.exports = (sequelize, Sequelize) => {
     },
     description: {
       type: Sequelize.INTEGER,
-    }
+    },
   });
+
+  medicament.associate = (models) => {
+    medicament.belongsToMany(models.prescription, {
+      through: "medicament_prescription",
+    });
+  };
+
+  return medicament;
 };

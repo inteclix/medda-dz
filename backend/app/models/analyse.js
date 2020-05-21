@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("analyses", {
+  const analyse = sequelize.define("analyses", {
     name: {
       type: Sequelize.STRING
     },
@@ -19,4 +19,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER // 0: pending, 1: finish, 2: seen
     }
   })
+
+  analyse.associate = (models) => {
+
+  }
+
+  return analyse
 }

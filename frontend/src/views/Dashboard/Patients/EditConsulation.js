@@ -3,7 +3,8 @@ import { useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
-import Form, { renderFields } from "components/Form";
+import Form, { renderField } from "components/FormFields";
+
 import {
   Paper,
   Typography,
@@ -11,8 +12,14 @@ import {
   TextField,
   makeStyles,
   LinearProgress,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Button,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +41,7 @@ export default (props) => {
   const classes = useStyles();
   window.parameters = parameters;
   window.parametersRow = parametersRow;
-  const rowForm = [
+  const consultationForm = [
     {
       name: "motifs",
       placeholder: "Motifs",
@@ -99,7 +106,12 @@ export default (props) => {
         .get(`/consultations/${params.consultationId}`)
         .then(({ data }) => {
           const fetchedParamaters = data.health_parameters.map((p, i) => {
-            pRow["_id" + p.id] = p.consultation_health_parameters.value;
+            if (getType(p.type) === "boolean") {
+              pRow["_id" + p.id] =
+                p.consultation_health_parameters.value === "true";
+            } else {
+              pRow["_id" + p.id] = p.consultation_health_parameters.value;
+            }
             return {
               ...p,
               type: getType(p.type),
@@ -122,13 +134,15 @@ export default (props) => {
           enqueueSnackbar(message, {
             variant: "error",
           });
-          //setIsLoading(false);
+          setIsLoading(false);
         });
     };
     load();
   }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data, form) => {
+    window.form = form
+    window.data = data
     let healthParameters = [];
     let id;
     let value;
@@ -136,7 +150,7 @@ export default (props) => {
       if (key.startsWith("_id")) {
         id = key.slice(3);
         value = data[key];
-        healthParameters.push({ healthParameterId: id, value: value });
+        healthParameters.push({ healthParameterId: id, value: value.toString() });
         delete data[key];
       }
     });
@@ -149,7 +163,8 @@ export default (props) => {
         enqueueSnackbar(message, {
           variant: "success",
         });
-        setIsLoading(false);
+        //setIsLoading(false);
+        form.reset()
         //history.push(`/patients/${patient.id}`)
       })
       .catch((err) => {
@@ -157,7 +172,7 @@ export default (props) => {
         enqueueSnackbar(message, {
           variant: "error",
         });
-        setIsLoading(false);
+        //setIsLoading(false);
       });
   };
 
@@ -198,49 +213,112 @@ export default (props) => {
             " " +
             consultation?.patient?.user?.lastname}
       </Typography>
-      <Box component="form">
-        <Form
-          form={rowForm}
-          onSubmit={onSubmit}
-          isLoading={isLoading}
-          extraFieldsBottom={(control, errors) => {
-            return (
-              <Paper className={classes.healthParameter}>
-                <Autocomplete
-                  multiple
-                  onChange={(event, values) => setParameters(values)}
-                  filterSelectedOptions
-                  getOptionSelected={(option, value) =>
-                    option.name === value.name
-                  }
-                  size="small"
-                  limitTags={3}
-                  id="multiple-limit-tags"
-                  options={parameterOptions}
-                  defaultValue={defaultValueParameters}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Paramaters de santé"
-                      placeholder="Paramaters de santé"
-                    />
+      <Form
+        render={(form) => (
+          <Box marginTop={1}>
+            <ExpansionPanel expanded>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>
+                  Consultation
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box display="flex" flexWrap="wrap">
+                  {consultationForm.map((field, index) =>
+                    renderField(field, form, index, consultation)
                   )}
-                />
-                <Paper style={{ marginTop: 20, padding: 10 }}>
-                  {parameters.length !== 0 &&
-                    renderFields(parameters, control, errors, parametersRow)}
-                  {parameters.length === 0 && (
-                    <Typography>
-                      Sélectionner un ou plusieur paramètres de santé
-                    </Typography>
-                  )}
-                </Paper>
-              </Paper>
-            );
-          }}
-        />
-      </Box>
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+              >
+                <Typography className={classes.heading}>
+                  Paramaters de santé
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box flex={1} display="flex" flexDirection="column">
+                  <Autocomplete
+                    multiple
+                    onChange={(event, values) => setParameters(values)}
+                    filterSelectedOptions
+                    getOptionSelected={(option, value) =>
+                      option.name === value.name
+                    }
+                    defaultValue={defaultValueParameters}
+                    size="small"
+                    limitTags={3}
+                    id="multiple-limit-tags"
+                    options={parameterOptions}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Paramaters"
+                        placeholder="Paramaters"
+                      />
+                    )}
+                  />
+                  <Paper
+                    style={{
+                      marginTop: 20,
+                      padding: 10,
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                    }}
+                  >
+                    {parameters.length !== 0 &&
+                      parameters.map((field, index) =>
+                        renderField(field, form, field.name, parametersRow)
+                      )}
+                    {parameters.length === 0 && (
+                      <Typography>
+                        Sélectionner un ou plusieur paramètres de santé
+                      </Typography>
+                    )}
+                  </Paper>
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel3a-content"
+                id="panel3a-header"
+              >
+                <Typography className={classes.heading}>Ordonance</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box flex={1} display="flex" flexDirection="column">
+                  Ordonance{" "}
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <Button
+              onClick={form.handleSubmit(data => onSubmit(data, form))}
+              fullWidth
+              variant="outlined"
+              color="primary"
+              disabled={
+                Object.keys(form.formState.touched).length === 0
+              }
+              style={{ marginTop: 10 }}
+            >
+              OK
+            </Button>
+          </Box>
+        )}
+      />
     </Paper>
   );
 };

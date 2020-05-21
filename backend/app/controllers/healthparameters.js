@@ -1,14 +1,14 @@
 const db = require("../models");
 
 exports.getAll = async (req, res) => {
-  const rows = await db.healthParameter.findAll({
+  const rows = await db.health_parameter.findAll({
     include: [
       {
-        model: db.healthParameterOption,
+        model: db.health_parameter_option,
         attributes: ["name"]
       },
       {
-        model: db.healthParameterCategory,
+        model: db.health_parameter_category,
         attributes: ["name"]
       }
     ]

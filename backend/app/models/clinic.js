@@ -1,35 +1,43 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("clinics", {
+  const clinic = sequelize.define("clinics", {
     name: {
       type: Sequelize.STRING,
-      unique: 1
+      unique: 1,
     },
     description: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     address: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     tel: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     mobile: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     willaya: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     town: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     logo: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     lat: {
-      type: Sequelize.FLOAT
+      type: Sequelize.FLOAT,
     },
     lon: {
-      type: Sequelize.FLOAT
-    }
+      type: Sequelize.FLOAT,
+    },
   });
+  
+  clinic.associate = (models) => {
+    clinic.hasMany(models.secretary);
+    clinic.hasMany(models.doctor);
+    clinic.hasMany(models.appointment);
+    clinic.belongsToMany(models.patient, { through: "clinic_patient" });
+  };
+  return clinic;
 };

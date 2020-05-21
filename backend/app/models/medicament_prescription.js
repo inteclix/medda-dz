@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  return sequelize.define("medicament_prescription", {
+  const medicament_prescription = sequelize.define("medicament_prescription", {
     posologie: {
       type: Sequelize.STRING,
     },
@@ -10,4 +10,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     }
   });
+
+  medicament_prescription.associate = (models) => {}
+
+  return medicament_prescription
 };

@@ -1,60 +1,65 @@
 module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("users", {
+  const user = sequelize.define("users", {
     username: {
       type: Sequelize.STRING,
-      unique: 1
+      unique: 1,
     },
     password: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     email: {
       type: Sequelize.STRING,
-      unique: 1
+      unique: 1,
     },
     permissions: {
       type: Sequelize.STRING, // doctor secretary patient admin
     },
     firstname: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     lastname: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     civilState: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     gender: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     dateBirth: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     placeBirth: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     tel: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     img: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     mobile: {
       type: Sequelize.STRING,
-      unique: 1
+      unique: 1,
     },
     mobileIsVerified: {
       type: Sequelize.BOOLEAN,
-      defaultValue: 0
+      defaultValue: 0,
     },
     isActive: {
       type: Sequelize.BOOLEAN,
-      defaultValue: 1
+      defaultValue: 1,
     },
     is: {
       type: Sequelize.STRING,
-      defaultValue: "user"
-    }
+      defaultValue: "user",
+    },
   });
 
-  return User;
+  user.associate = (models) => {
+    user.hasOne(models.doctor);
+    user.hasOne(models.secretary);
+    user.hasOne(models.patient);
+  };
+  return user;
 };

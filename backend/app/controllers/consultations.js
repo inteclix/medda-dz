@@ -1,18 +1,26 @@
 const db = require("../models");
 
-exports.getConsultation = async (req, res) => {
+exports.getAll = async (req, res) => {
+  const consultations = await db.consultation.findAll();
+  if (!consultations) {
+    return res.status(404).send({ message: "no consoltaions" });
+  }
+  return res.status(200).send(consultations);
+};
+
+exports.getConsultationById = async (req, res) => {
   const id = req.params.id;
   const consultation = await db.consultation.findByPk(id, {
     include: [
       {
-        model: db.healthParameter,
+        model: db.health_parameter,
         include: [
           {
-            model: db.healthParameterOption,
+            model: db.health_parameter_option,
             attributes: ["name"],
           },
           {
-            model: db.healthParameterCategory,
+            model: db.health_parameter_category,
             attributes: ["name"],
           },
         ],
@@ -29,14 +37,6 @@ exports.getConsultation = async (req, res) => {
   return res.status(200).send(consultation);
 };
 
-exports.getAll = async (req, res) => {
-  const consultations = await db.consultation.findAll();
-  if (!consultations) {
-    return res.status(404).send({ message: "no consoltaions" });
-  }
-  return res.status(200).send(consultations);
-};
-
 exports.create = async (req, res) => {
   const consultation = await db.consultation.create(
     { ...req.body, doctorId: req.doctor.id },
@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
   const healthParameters = req.body.healthParameters.map((p) => {
     return { ...p, consultationId: consultation.id };
   });
-  const consultationHealthPrameters = await db.consultationHealthParameter.bulkCreate(
+  const consultationHealthPrameters = await db.consultation_health_parameter.bulkCreate(
     healthParameters
   );
 
@@ -60,14 +60,32 @@ exports.create = async (req, res) => {
   return res.status(200).send(consultation);
 };
 
-exports.update = async (req, res) => {
+exports.updateById = async (req, res) => {
   const id = req.params.id;
-  const consultation = await db.consultation.findByPk(id);
+  const consultation = await db.consultation.findByPk(id, {
+    include: db.health_parameter
+  });
   if (!consultation) {
     return res.status(404).send({ message: "Not found" });
   }
-  consultation.update(req.body, {
-    attributtes: ["value", "test"],
+  const updatedConsultation = await consultation.update(req.body, {
+    // attributtes: ["value", "test"],
+   });
+   if(!updatedConsultation){
+     return res.status(404).send({ message: "Error when update" });
+   }
+  const oldParametres = await consultation.setHealth_parameters([])
+  console.dir(oldParametres)
+
+  const healthParameters = req.body.healthParameters.map((p) => {
+    return { ...p, consultationId: consultation.id };
   });
+  const consultationHealthPrameters = await db.consultation_health_parameter.bulkCreate(
+    healthParameters
+  );
+
+  if (!consultationHealthPrameters) {
+    return res.status(404).send({ message: "error when add paramaters" });
+  }
   return res.status(200).send(consultation);
 };

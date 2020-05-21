@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { useAppStore } from "stores";
-import Form, { renderFields, renderField } from "./Form";
+import Form, { renderField } from "components/FormFields";
 import {
   Paper,
   Typography,
@@ -17,7 +17,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   healthParameter: {
@@ -40,7 +40,7 @@ export default (props) => {
       name: "motifs",
       placeholder: "Motifs",
       type: "text",
-      rules: { required: "Ce champ est obligatoire" }
+      rules: { required: "Ce champ est obligatoire" },
     },
     {
       name: "historique",
@@ -104,7 +104,7 @@ export default (props) => {
           setIsLoading(false);
         })
         .catch((err) => {
-          const message = err ?.response ?.data ?.message || "" + err;
+          const message = err?.response?.data?.message || "" + err;
           enqueueSnackbar(message, {
             variant: "error",
           });
@@ -122,7 +122,7 @@ export default (props) => {
       if (key.startsWith("_id")) {
         id = key.slice(3);
         value = data[key];
-        healthParameters.push({ healthParameterId: id, value: value });
+        healthParameters.push({ healthParameterId: id, value: value.toString() });
         delete data[key];
       }
     });
@@ -139,7 +139,7 @@ export default (props) => {
         history.push(`/patients/${patient.id}/consultations/${data.id}/edit`);
       })
       .catch((err) => {
-        const message = err ?.response ?.data ?.message || "" + err;
+        const message = err?.response?.data?.message || "" + err;
         enqueueSnackbar(message, {
           variant: "error",
         });
@@ -178,92 +178,112 @@ export default (props) => {
       <Typography variant="h6">
         Nouvelle consultations pour:{" "}
         {patient &&
-          patient ?.user ?.firstname ?.toUpperCase() +
+          patient?.user?.firstname?.toUpperCase() +
             " " +
-            patient ?.user ?.lastname ?.toUpperCase()}
+            patient?.user?.lastname?.toUpperCase()}
       </Typography>
-      <Form render={(form) => (
-        <Box marginTop={1}>
-          <ExpansionPanel expanded>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Consultation</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Box display="flex" flexWrap="wrap">
-                {consultationForm.map((field, index) => (
-                  renderField(field, form, index)
-                ))}
-              </Box>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2a-content"
-              id="panel2a-header"
-            >
-              <Typography className={classes.heading}>Paramaters de santé</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Box flex={1} display="flex" flexDirection="column">
-                <Autocomplete
-                  multiple
-                  onChange={(event, values) => setParameters(values)}
-                  filterSelectedOptions
-                  getOptionSelected={(option, value) =>
-                    option.name === value.name
-                  }
-                  size="small"
-                  limitTags={3}
-                  id="multiple-limit-tags"
-                  options={parameterOptions}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Paramaters"
-                      placeholder="Paramaters"
-                    />
+      <Form
+        render={(form) => (
+          <Box marginTop={1}>
+            <ExpansionPanel expanded>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>
+                  Consultation
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box display="flex" flexWrap="wrap">
+                  {consultationForm.map((field, index) =>
+                    renderField(field, form, index)
                   )}
-                />
-                <Paper style={{ marginTop: 20, padding: 10, display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                  {
-                    parameters.length !== 0 &&
-                    parameters.map((field, index) => (
-                      renderField(field, form, field.name)
-                    ))
-                  }
-                  {parameters.length === 0 && (
-                    <Typography>
-                      Sélectionner un ou plusieur paramètres de santé
-                  </Typography>
-                  )}
-                </Paper>
-              </Box>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel3a-content"
-              id="panel3a-header"
-            >
-              <Typography className={classes.heading}>Ordonance</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Box flex={1} display="flex" flexDirection="column">
-                Ordonance              </Box>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <Button onClick={form.handleSubmit(onSubmit)} fullWidth variant="outlined" color="primary" style={{ marginTop: 10 }}>OK</Button>
-        </Box>
-      )} />
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
 
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+              >
+                <Typography className={classes.heading}>
+                  Paramaters de santé
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box flex={1} display="flex" flexDirection="column">
+                  <Autocomplete
+                    multiple
+                    onChange={(event, values) => setParameters(values)}
+                    filterSelectedOptions
+                    getOptionSelected={(option, value) =>
+                      option.name === value.name
+                    }
+                    size="small"
+                    limitTags={3}
+                    id="multiple-limit-tags"
+                    options={parameterOptions}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Paramaters"
+                        placeholder="Paramaters"
+                      />
+                    )}
+                  />
+                  <Paper
+                    style={{
+                      marginTop: 20,
+                      padding: 10,
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                    }}
+                  >
+                    {parameters.length !== 0 &&
+                      parameters.map((field, index) =>
+                        renderField(field, form, field.name)
+                      )}
+                    {parameters.length === 0 && (
+                      <Typography>
+                        Sélectionner un ou plusieur paramètres de santé
+                      </Typography>
+                    )}
+                  </Paper>
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel3a-content"
+                id="panel3a-header"
+              >
+                <Typography className={classes.heading}>Ordonance</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Box flex={1} display="flex" flexDirection="column">
+                  Ordonance{" "}
+                </Box>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <Button
+              onClick={form.handleSubmit(onSubmit)}
+              fullWidth
+              variant="outlined"
+              color="primary"
+              style={{ marginTop: 10 }}
+            >
+              OK
+            </Button>
+          </Box>
+        )}
+      />
     </Paper>
   );
 };
