@@ -97,14 +97,7 @@ const List = () => {
           columns={columns}
           data={appointments}
           options={{
-            search: true,
-            rowStyle: (rowData) => ({
-              backgroundColor:
-                selectedRow && selectedRow.tableData.id === rowData.tableData.id
-                  ? "#EEE"
-                  : "#FFF",
-            }),
-            actionsColumnIndex: -1,
+            search: true
           }}
           onRowClick={(evt, selectedRow) => setSelectedRow(selectedRow)}
           detailPanel={(rowData) => {

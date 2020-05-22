@@ -4,11 +4,14 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children, value }) {
   const [drawerOpen, setDrowerOpen] = useState(false);
+  const [medicaments, setMedicaments] = useState([])
   return (
     <AppContext.Provider
       value={{
         drawerOpen,
         setDrowerOpen,
+        setMedicaments,
+        medicaments,
         ...value,
       }}
     >

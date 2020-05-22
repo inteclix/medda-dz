@@ -19,6 +19,8 @@ import {
 import { Autocomplete } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import AddPrescription from "containers/dashboard/AddPrescription";
+
 const useStyles = makeStyles((theme) => ({
   healthParameter: {
     padding: theme.spacing(2),
@@ -122,7 +124,10 @@ export default (props) => {
       if (key.startsWith("_id")) {
         id = key.slice(3);
         value = data[key];
-        healthParameters.push({ healthParameterId: id, value: value.toString() });
+        healthParameters.push({
+          healthParameterId: id,
+          value: value.toString(),
+        });
         delete data[key];
       }
     });
@@ -170,7 +175,7 @@ export default (props) => {
   }
   return (
     <Paper
-      style={{ padding: 10 }}
+      style={{ padding: 10, backgroundColor: "#f5f5f5" }}
       display="flex"
       flexDirection="column"
       component={Box}
@@ -178,7 +183,9 @@ export default (props) => {
       <Typography variant="h6">
         Nouvelle consultations pour:{" "}
         {patient &&
-          patient?.user?.firstname?.toUpperCase() +
+          (patient?.user?.gender === "man" ? "Mr" : "M") +
+            ". " +
+            patient?.user?.firstname?.toUpperCase() +
             " " +
             patient?.user?.lastname?.toUpperCase()}
       </Typography>
@@ -268,18 +275,18 @@ export default (props) => {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Box flex={1} display="flex" flexDirection="column">
-                  Ordonance{" "}
+                  <AddPrescription form={form} />
                 </Box>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Button
               onClick={form.handleSubmit(onSubmit)}
               fullWidth
-              variant="outlined"
               color="primary"
+              variant="contained"
               style={{ marginTop: 10 }}
             >
-              OK
+              Sauvgarder
             </Button>
           </Box>
         )}

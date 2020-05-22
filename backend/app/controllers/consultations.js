@@ -63,19 +63,19 @@ exports.create = async (req, res) => {
 exports.updateById = async (req, res) => {
   const id = req.params.id;
   const consultation = await db.consultation.findByPk(id, {
-    include: db.health_parameter
+    include: db.health_parameter,
   });
   if (!consultation) {
     return res.status(404).send({ message: "Not found" });
   }
   const updatedConsultation = await consultation.update(req.body, {
     // attributtes: ["value", "test"],
-   });
-   if(!updatedConsultation){
-     return res.status(404).send({ message: "Error when update" });
-   }
-  const oldParametres = await consultation.setHealth_parameters([])
-  console.dir(oldParametres)
+  });
+  if (!updatedConsultation) {
+    return res.status(404).send({ message: "Error when update" });
+  }
+  const oldParametres = await consultation.setHealth_parameters([]);
+  console.dir(oldParametres);
 
   const healthParameters = req.body.healthParameters.map((p) => {
     return { ...p, consultationId: consultation.id };
@@ -88,4 +88,19 @@ exports.updateById = async (req, res) => {
     return res.status(404).send({ message: "error when add paramaters" });
   }
   return res.status(200).send(consultation);
+};
+
+exports.deleteById = async (req, res) => {
+  const consultation = await db.consultation.findByPk(req.params.id);
+  if (!consultation) {
+    return res.status(404).send({ message: "Not found" });
+  }
+  await consultation
+    .destroy()
+    .then(() => {
+      return res.status(203).send({ message: "consultation removed" });
+    })
+    .catch(() => {
+      return res.status(500).send({ message: "error when removed" });
+    });
 };

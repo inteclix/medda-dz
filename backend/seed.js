@@ -82,10 +82,6 @@ async function seed() {
     name: "option for list",
     healthParameterId: 5
   })
-
-  await db.medicament.create({
-    name: "doliprane"
-  })
 }
 
 seed()

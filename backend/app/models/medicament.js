@@ -6,6 +6,24 @@ module.exports = (sequelize, Sequelize) => {
     code: {
       type: Sequelize.STRING,
     },
+    codeChifa: {
+      type: Sequelize.STRING,
+    },
+    dosage: {
+      type: Sequelize.STRING,
+    },
+    packing: {
+      type: Sequelize.STRING,
+    },
+    isPrinceps: {
+      type: Sequelize.STRING,
+    },
+    isPsychotropic: {
+      type: Sequelize.STRING,
+    },
+    formLabel: {
+      type: Sequelize.STRING,
+    },
     description: {
       type: Sequelize.INTEGER,
     },

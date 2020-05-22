@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import moment from "moment";
 import { useAppStore } from "stores";
+import { useCallback } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,8 @@ const PatientConsultations = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
-  useEffect(() => {
+
+  const getConsultations = useCallback(()=>{
     api
       .get(`patients/${id}/consultations`)
       .then(({ data }) => {
@@ -55,6 +57,9 @@ const PatientConsultations = ({ id }) => {
         });
         setIsLoading(false);
       });
+  })
+  useEffect(() => {
+    getConsultations()
   }, []);
   if (isLoading) {
     return <LinearProgress />;
@@ -69,7 +74,7 @@ const PatientConsultations = ({ id }) => {
   return (
     <List component={PerfectScrollbar} className={classes.root}>
       {consultations.map((c, index) => (
-        <ListItem alignItems="center">
+        <ListItem key={c.id} alignItems="center">
           <ListItemAvatar>
             <Avatar>
               <AssignmentIcon />
@@ -100,7 +105,22 @@ const PatientConsultations = ({ id }) => {
           />
           <ListItemSecondaryAction>
             <IconButton edge="end" aria-label="delete">
-              <DeleteIcon />
+              <DeleteIcon onClick={()=>{
+                window.confirm("Supprimer ?") &&
+                api.delete(`consultations/${c.id}`)
+                .then(({ data }) => {
+                  enqueueSnackbar(data.message, {
+                    variant: "success",
+                  });
+                  getConsultations()
+                })
+                .catch((err) => {
+                  const message = err?.response?.data?.message || "" + err;
+                  enqueueSnackbar(message, {
+                    variant: "error",
+                  });
+                });
+              }} />
             </IconButton>
             <IconButton onClick={()=> history.push(`/patients/${id}/consultations/${c.id}/edit`)} style={{ marginLeft: ".5em" }} aria-label="edit">
               <VisibilityIcon />

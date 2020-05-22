@@ -141,8 +141,8 @@ export default (props) => {
   }, []);
 
   const onSubmit = (data, form) => {
-    window.form = form
-    window.data = data
+    window.form = form;
+    window.data = data;
     let healthParameters = [];
     let id;
     let value;
@@ -150,7 +150,10 @@ export default (props) => {
       if (key.startsWith("_id")) {
         id = key.slice(3);
         value = data[key];
-        healthParameters.push({ healthParameterId: id, value: value.toString() });
+        healthParameters.push({
+          healthParameterId: id,
+          value: value.toString(),
+        });
         delete data[key];
       }
     });
@@ -164,7 +167,7 @@ export default (props) => {
           variant: "success",
         });
         //setIsLoading(false);
-        form.reset()
+        form.reset();
         //history.push(`/patients/${patient.id}`)
       })
       .catch((err) => {
@@ -199,7 +202,7 @@ export default (props) => {
   }
   return (
     <Paper
-      style={{ padding: 10 }}
+      style={{ padding: 10, backgroundColor: "whitesmoke" }}
       display="flex"
       flexDirection="column"
       component={Box}
@@ -209,9 +212,9 @@ export default (props) => {
         {`${moment(consultation.createdAt).format("DD/MM/YYYY, h:mm:ss a")}`})
         pour:{" "}
         {consultation &&
-          consultation?.patient?.user?.firstname +
+          consultation?.patient?.user?.firstname.toUpperCase() +
             " " +
-            consultation?.patient?.user?.lastname}
+            consultation?.patient?.user?.lastname.toUpperCase()}
       </Typography>
       <Form
         render={(form) => (
@@ -305,13 +308,11 @@ export default (props) => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Button
-              onClick={form.handleSubmit(data => onSubmit(data, form))}
+              onClick={form.handleSubmit((data) => onSubmit(data, form))}
               fullWidth
               variant="outlined"
               color="primary"
-              disabled={
-                Object.keys(form.formState.touched).length === 0
-              }
+              disabled={Object.keys(form.formState.touched).length === 0}
               style={{ marginTop: 10 }}
             >
               OK

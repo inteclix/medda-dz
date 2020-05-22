@@ -24,6 +24,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 import Navigator from "containers/dashboard/Navigator";
 import Copyright from "components/Copyright";
