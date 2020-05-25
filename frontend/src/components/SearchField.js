@@ -1,9 +1,12 @@
 import React from "react";
 
+import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import throttle from "lodash/throttle";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
 
 import { useAppStore } from "stores";
 
@@ -81,7 +84,28 @@ export default ({ url, textFieldProps, ...props }) => {
           }}
         />
       )}
+      renderOption={(option) => {
+        const matches = match(props.optionLabel ? option[props.optionLabel]:option, inputValue.toUpperCase());
+        const parts = parse(props.optionLabel ? option[props.optionLabel]:option, matches);
+        return (
+          <Typography>
+            {parts.map((part, index) => (
+              <span
+                key={index}
+                style={{ fontWeight: part.highlight ? 700 : 400 }}
+              >
+                {part.text}
+              </span>
+            ))}
+          </Typography>
+        );
+      }}
       {...props}
+      onChange={(event, value) => {
+        props.onChange(event, value);
+        console.log("clearOnSelect");
+        props.clearOnSelect && setInputValue("");
+      }}
     />
   );
 };

@@ -5,9 +5,9 @@ exports.getAll = async (req, res) => {
   try {
     const medicaments = await db.medicament.findAll({
       limit: 15,
-      order: [["name", "ASC"]],
+      order: [["label", "ASC"]],
       where: {
-        [req.query.where ? req.query.where : "name"]: {
+        [req.query.where ? req.query.where : "label"]: {
           [Op.like]: `%${req.query.search ? req.query.search : ""}%`,
         },
       },

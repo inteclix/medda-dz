@@ -38,7 +38,7 @@ pgDrugForm = pg.define("DrugForm", {
 pgDrug.belongsTo(pgDrugForm);
 
 const mysqlMedicament = mysql.define("medicaments", {
-  name: {
+  label: {
     type: Sequelize.STRING,
   },
   code: {
@@ -67,7 +67,7 @@ const mysqlMedicament = mysql.define("medicaments", {
   },
 });
 
-const getAllDrug = async () => {
+const run = async () => {
   const drugs = await pgDrug.findAll({
     attributes: [
       "Label",
@@ -85,7 +85,7 @@ const getAllDrug = async () => {
     ],
   });
   const data = drugs.map((drug) => ({
-    name: drug.Label,
+    label: drug.Label,
     codeChifa: drug.ChiffaCode,
     formLabel: drug.DrugForm ? drug.DrugForm.Label : "",
     dosage: drug.Dosage,
@@ -98,4 +98,4 @@ const getAllDrug = async () => {
   //await mysqlMedicament.destroy({where:{}})
 };
 
-getAllDrug();
+run();

@@ -47,9 +47,6 @@ const useStyles = makeStyles((theme) => ({
   searchBar: {
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
   },
-  searchInput: {
-    fontSize: theme.typography.fontSize,
-  },
   block: {
     display: "block",
   },
@@ -126,6 +123,27 @@ export default () => {
         style={{ display: tabValue === 0 ? "" : "none" }}
         className={classes.tabPanel}
       >
+        <AppBar
+          className={classes.searchBar}
+          position="static"
+          color="default"
+          elevation={0}
+        >
+          <Toolbar>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item></Grid>
+              <Grid item xs></Grid>
+              <Grid item>
+                <Tooltip title="Imprimer">
+                  <IconButton>
+                    <PrintIcon className={classes.block} color="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+
         <Box padding={1} component={Grid} container spacing={1}>
           {consultationForm.map((field, index) => (
             <Grid item xs={12} md={6}>
@@ -152,10 +170,10 @@ export default () => {
   const renderHealthParameter = (p) => {
     let field = {
       name: "h_id" + p.id,
-      type: getType(p.type),
+      type: p.type,
       placeholder: p.label,
       options: p.health_parameter_options
-        ? p.health_parameter_options.map((o) => o.name)
+        ? p.health_parameter_options.map((o) => o.label)
         : [],
     };
     return (
@@ -210,11 +228,11 @@ export default () => {
               <Grid item xs>
                 <SearchField
                   url="healthparameters"
+                  optionLabel="label"
                   textFieldProps={{
                     placeholder: "Rechercher un parameter de santé",
                     InputProps: {
                       disableUnderline: true,
-                      className: classes.searchInput,
                     },
                   }}
                   getOptionLabel={(option) =>
@@ -251,7 +269,7 @@ export default () => {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     Aucun Parametre selectione
                   </Typography>
                 </Box>
@@ -272,7 +290,7 @@ export default () => {
       <Grid key={field.name} item xs={12} md={12}>
         <Box
           alignItems="center"
-          border="1px solid lightgray"
+          border="1px dashed lightgray"
           borderRadius={4}
           display="flex"
           alignItems="center"
@@ -281,47 +299,85 @@ export default () => {
         >
           <Grid container spacing={1} alignItems="center">
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1">Medicament: {m.name}</Typography>
-              <Typography variant="subtitle2">Packing: {m.packing}</Typography>
-              <Tooltip title={m.dosage}>
-                <HelpIcon style={{ display: "inline" }} />
-              </Tooltip>
-            </Grid>
-            <Grid item xs={6} md={3}>
-              {renderField(
-                {
-                  name: "dosage",
-                  type: "text",
-                  placeholder: "dosage",
-                },
-                hookForm,
-                "dosage" + m.id
+              <Typography variant="body1" gutterBottom>
+                <strong>Medicament: </strong>
+                {m.label}
+              </Typography>
+              {m.packing && (
+                <Typography variant="caption">
+                  <strong>[Emballage: </strong>
+                  {m.packing}]
+                </Typography>
+              )}
+              {m.formLabel && (
+                <Typography variant="caption">
+                  <strong>, [Form: </strong>
+                  {m.formLabel}]
+                </Typography>
+              )}
+              {m.dosage && (
+                <Typography variant="caption">
+                  <strong>, [Dosage: </strong>
+                  {m.dosage}]
+                </Typography>
               )}
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={4} md={2}>
               {renderField(
                 {
-                  name: "mention",
-                  type: "text",
-                  placeholder: "mention",
+                  name: m.id + "_number_unit",
+                  type: "number",
+                  placeholder: "Nb unités",
                 },
                 hookForm,
-                "mention" + m.id
+                m.id + "_number_unit"
+              )}
+            </Grid>
+            <Grid item xs={4} md={2}>
+              {renderField(
+                {
+                  name: m.id + "_dosage",
+                  type: "text",
+                  placeholder: "Dosage",
+                },
+                hookForm,
+                m.id + "_dosage"
+              )}
+            </Grid>
+            <Grid item xs={4} md={2}>
+              {renderField(
+                {
+                  name: m.id + "_mention",
+                  type: "text",
+                  placeholder: "Mention",
+                },
+                hookForm,
+                m.id + "_mention"
               )}
             </Grid>
           </Grid>
           <Divider orientation="vertical" flexItem />
-          <IconButton
-            style={{ marginRight: 4 }}
-            onClick={() => {
-              window.confirm("Supprimer ?") &&
-                setMedicaments(medicaments.filter((fp) => fp.id !== m.id));
-            }}
-            edge="end"
-            aria-label="delete"
-          >
-            <DeleteIcon />
-          </IconButton>
+          <Box display="flex" flexDirection="column">
+            <IconButton
+              style={{ margin: 2 }}
+              onClick={() => {
+                window.confirm("Supprimer ?") &&
+                  setMedicaments(medicaments.filter((fp) => fp.id !== m.id));
+              }}
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+            <IconButton
+              style={{ margin: 2 }}
+              onClick={() => {
+                window.alert(JSON.stringify(m, null, 2));
+              }}
+              aria-label="help"
+            >
+              <HelpIcon />
+            </IconButton>
+          </Box>
         </Box>
       </Grid>
     );
@@ -347,16 +403,15 @@ export default () => {
               <Grid item xs>
                 <SearchField
                   url="medicaments"
+                  optionLabel="label"
                   textFieldProps={{
                     placeholder: "Rechercher un medicament",
                     InputProps: {
                       disableUnderline: true,
-                      className: classes.searchInput,
                     },
                   }}
-                  getOptionLabel={(option) => (option.name ? option.name : "")}
+                  getOptionLabel={(option) => (option.label ? option.label : "")}
                   getOptionDisabled={(option) => _.some(medicaments, option)}
-                  clearOnBlur
                   onChange={(event, value) => {
                     value && setMedicaments([...medicaments, value]);
                   }}
@@ -385,7 +440,7 @@ export default () => {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     Aucun medicament selectione
                   </Typography>
                 </Box>
@@ -418,22 +473,4 @@ export default () => {
       {renderPrescription()}
     </ContainerWithBack>
   );
-};
-
-const getType = (t) => {
-  if (t === 0) {
-    return "text";
-  }
-  if (t === 1) {
-    return "number";
-  }
-  if (t === 2) {
-    return "date";
-  }
-  if (t === 3) {
-    return "boolean";
-  }
-  if (t === 4) {
-    return "list";
-  }
 };

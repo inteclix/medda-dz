@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const medicament = sequelize.define("medicaments", {
-    name: {
+    label: {
       type: Sequelize.STRING,
     },
     code: {

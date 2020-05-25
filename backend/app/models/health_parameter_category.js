@@ -2,7 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const health_parameter_category = sequelize.define(
     "health_parameter_categories",
     {
-      name: {
+      label: {
         type: Sequelize.STRING,
         unique: 1,
       },

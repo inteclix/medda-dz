@@ -2,9 +2,8 @@ module.exports = (sequelize, Sequelize) => {
   const health_parameter_option = sequelize.define(
     "health_parameter_options",
     {
-      name: {
+      label: {
         type: Sequelize.STRING,
-        unique: 1,
       },
     }
   );

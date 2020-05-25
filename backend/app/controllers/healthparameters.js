@@ -13,11 +13,11 @@ exports.getAll = async (req, res) => {
     include: [
       {
         model: db.health_parameter_option,
-        attributes: ["name"]
+        attributes: ["label"]
       },
       {
         model: db.health_parameter_category,
-        attributes: ["name"]
+        attributes: ["label"]
       }
     ]
   })
