@@ -9,12 +9,15 @@ import { useAppStore } from "stores";
 
 import MaterialTable from "components/MaterialTable";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
-import PatientConsultations from "./PatientConsultations"
+import Container from "components/layout/Container";
+
+import PatientConsultations from "./PatientConsultations";
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3),
+    //padding: theme.spacing(3),
   },
   content: {
     marginTop: theme.spacing(2),
@@ -39,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const List = () => {
+export default () => {
   const history = useHistory();
   const classes = useStyles();
   const { api } = useAppStore();
@@ -72,7 +75,7 @@ const List = () => {
     { title: "Gender", field: "user.gender" },
   ];
   return (
-    <div className={classes.root}>
+    <Container title="Patients" className={classes.root}>
       <div>
         <div className={classes.row}>
           <span className={classes.spacer} />
@@ -97,11 +100,11 @@ const List = () => {
           columns={columns}
           data={appointments}
           options={{
-            search: true
+            search: true,
           }}
           onRowClick={(evt, selectedRow) => setSelectedRow(selectedRow)}
           detailPanel={(rowData) => {
-            return <PatientConsultations key={rowData.id} id={rowData.id}/>
+            return <PatientConsultations key={rowData.id} id={rowData.id} />;
           }}
           actions={[
             {
@@ -120,8 +123,6 @@ const List = () => {
           ]}
         />
       </div>
-    </div>
+    </Container>
   );
 };
-
-export default List;

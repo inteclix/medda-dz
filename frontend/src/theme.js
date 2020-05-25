@@ -87,7 +87,8 @@ theme = {
     },
     MuiDivider: {
       root: {
-        backgroundColor: "#404854",
+        backgroundColor: "lightgray",
+        margin: theme.spacing(1)
       },
     },
     MuiListItemText: {

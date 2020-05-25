@@ -4,7 +4,7 @@ import RoutesBuilder from "components/RoutesBuilder";
 import List from "./List";
 import Add from "./Add";
 import Edit from "./Edit";
-import AddConsulation from "./AddConsulation";
+import AddConsulation from "./AddCons";
 import EditConsulation from "./EditConsulation";
 
 const routes = [

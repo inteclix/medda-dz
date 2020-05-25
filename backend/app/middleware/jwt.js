@@ -18,11 +18,26 @@ exports.verifyToken = (req, res, next) => {
       });
     }
     req.userId = decoded.id;
-    const user = await db.user.findByPk(decoded.id)
-      .catch(() => {
-        return res.status(500).send("error no user in server");
+    try {
+      const user = await db.user.findByPk(decoded.id, {
+        include: [
+          {
+            model: db.doctor,
+            include: db.clinic,
+          },
+          {
+            model: db.secretary,
+            include: db.clinic,
+          },
+          {
+            model: db.patient,
+          },
+        ],
       });
-    req.user = user
-    next()
+      req.user = user;
+      return next();
+    } catch (err) {
+      return res.status(404).send({ message: "error on server"})
+    }
   });
 };

@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
     number_unit: {
       type: Sequelize.INTEGER,
     },
-    qsp: {
+    mention: {
       type: Sequelize.STRING,
     }
   });

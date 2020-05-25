@@ -10,11 +10,14 @@ import Others from "views/Others";
 
 import useApi from "hooks/useApi";
 import { AppProvider } from "stores";
+import ScrollToTopOnLocationChange from "components/ScrollToTopOnLocationChange";
 
 const AppContainer = ({ children }) => (
   <MuiPickersUtilsProvider utils={MomentUtils}>
     <SnackbarProvider maxSnack={3}>
-      <BrowserRouter>{children}</BrowserRouter>
+      <BrowserRouter>
+        <ScrollToTopOnLocationChange>{children}</ScrollToTopOnLocationChange>
+      </BrowserRouter>
     </SnackbarProvider>
   </MuiPickersUtilsProvider>
 );
@@ -23,7 +26,7 @@ function App() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [user, setUser] = useState(null);
   const { api, token, setToken } = useApi();
-  window.api = api
+  window.api = api;
   useEffect(() => {
     setIsLoadingUser(true);
     api

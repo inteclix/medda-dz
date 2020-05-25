@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as LinkRouter} from "react-router-dom";
+import { Link as LinkRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { ThemeProvider, withStyles } from "@material-ui/core/styles";
 import {
@@ -17,13 +17,13 @@ import {
   Tooltip,
   IconButton,
   Typography,
-  Popover 
+  Popover,
 } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MenuIcon from "@material-ui/icons/Menu";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import SettingsIcon from '@material-ui/icons/Settings';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import SettingsIcon from "@material-ui/icons/Settings";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import Navigator from "containers/dashboard/Navigator";
@@ -52,11 +52,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
-  main: {
-    flex: 1,
-    padding: theme.spacing(6, 4),
-    background: "#eaeff1",
-  },
+  main: {},
   footer: {
     padding: theme.spacing(2),
     background: "#eaeff1",
@@ -134,7 +130,7 @@ function Dashboard(props) {
                   >
                     <Avatar alt={user.username.toUpperCase()} />
                   </IconButton>
-                  <Popover 
+                  <Popover
                     anchorEl={profileAnchorEl}
                     keepMounted
                     open={Boolean(profileAnchorEl)}
@@ -147,19 +143,19 @@ function Dashboard(props) {
                         <ListItemIcon>
                           <AccountCircleIcon fontSize="small" />
                         </ListItemIcon>
-                        <Typography variant="inherit">
-                          Mon Compte
-                        </Typography>
+                        <Typography variant="inherit">Mon Compte</Typography>
                       </MenuItem>
                       <MenuItem component={LinkRouter} to="/settings">
                         <ListItemIcon>
                           <SettingsIcon fontSize="small" />
                         </ListItemIcon>
-                        <Typography variant="inherit">
-                          Parameters
-                        </Typography>
+                        <Typography variant="inherit">Parameters</Typography>
                       </MenuItem>
-                      <MenuItem  onClick={()=>{setToken("")}}>
+                      <MenuItem
+                        onClick={() => {
+                          setToken("");
+                        }}
+                      >
                         <ListItemIcon>
                           <ExitToAppIcon fontSize="small" />
                         </ListItemIcon>
@@ -168,14 +164,12 @@ function Dashboard(props) {
                         </Typography>
                       </MenuItem>
                     </MenuList>
-                  </Popover >
+                  </Popover>
                 </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
-          <main className={classes.main}>
-            <DashboardRoutes />
-          </main>
+          <DashboardRoutes />
           <footer className={classes.footer}>
             <Copyright />
           </footer>

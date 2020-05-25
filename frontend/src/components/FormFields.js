@@ -28,7 +28,7 @@ import { useForm, Controller } from "react-hook-form";
 const useStyles = makeStyles((theme) => ({}));
 
 export const renderField = (field, form, index, row) => {
-  const { control, errors } = form
+  const { control, errors } = form;
   if (field.type === "component") {
     return field.component;
   }
@@ -42,17 +42,17 @@ export const renderField = (field, form, index, row) => {
         key={index}
         margin="normal"
         error={Boolean(errors[field.name])}
-        style={{ margin: 10 }}
+        fullWidth
       >
         <Controller
           as={TextField}
+          fullWidth
           type={field.type}
           control={control}
           required={field.rules ? true : false}
           name={field.name ? field.name : field.code}
           defaultValue={row ? row[field.name] : ""}
           label={field.placeholder ? field.placeholder : field.label}
-          style={{ width: 280, ...field.style }}
           rules={field.rules}
         />
         <FormHelperText>
@@ -66,18 +66,18 @@ export const renderField = (field, form, index, row) => {
       <FormControl
         key={index}
         margin="normal"
-        style={{ margin: 10 }}
+        fullWidth
         error={Boolean(errors[field.name])}
       >
         <Controller
           as={TextField}
+          fullWidth
           type={"number"}
           control={control}
           required={field.rules ? true : false}
           name={field.name ? field.name : field.code}
           defaultValue={row ? row[field.name] : ""}
           label={field.placeholder}
-          style={{ width: 280, ...field.style }}
           rules={field.rules}
         />
         <FormHelperText>
@@ -91,16 +91,16 @@ export const renderField = (field, form, index, row) => {
       <FormControl
         key={index}
         margin="normal"
-        style={{ margin: 10 }}
+        fullWidth
         error={Boolean(errors[field.name])}
       >
         <Controller
           as={DatePicker}
+          fullWidth
           format="DD-MM-YYYY"
           control={control}
           required={field.rules ? true : false}
           name={field.name}
-          style={{ width: 280, ...field.style }}
           defaultValue={row ? row[field.name] : new Date()}
           label={field.placeholder}
           rules={field.rules}
@@ -118,18 +118,18 @@ export const renderField = (field, form, index, row) => {
     return (
       <FormControl
         margin="normal"
-        style={{ margin: 10 }}
+        fullWidth
         error={Boolean(errors[field.name])}
         key={index}
       >
         <Controller
           as={SingleSelect}
+          fullWidth
           name={field.name}
           defaultValue={row ? row[field.name] : ""}
           rules={field.rules}
           control={control}
           options={field.options}
-          style={{ width: 280, ...field.style }}
           label={field.placeholder}
         />
         <FormHelperText>
@@ -140,10 +140,11 @@ export const renderField = (field, form, index, row) => {
   }
   if (field.type === "boolean") {
     return (
-      <FormControl style={{ margin: 10 }} margin="normal" key={index}>
+      <FormControl fullWidth margin="normal" key={index}>
         <FormControlLabel
           control={
             <Controller
+              
               as={Switch}
               name={field.name}
               defaultValue={row ? row[field.name] : true}
@@ -156,15 +157,9 @@ export const renderField = (field, form, index, row) => {
     );
   }
   return null;
-}
+};
 
-export default ({
-  render,
-}) => {
+export default ({ render }) => {
   const form = useForm();
-  return (
-    <>
-      {render && render(form)}
-    </>
-  );
+  return <>{render && render(form)}</>;
 };

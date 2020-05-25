@@ -275,7 +275,7 @@ export default (props) => {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Box flex={1} display="flex" flexDirection="column">
-                  <AddPrescription form={form} />
+                  <AddPrescription patient={patient} form={form} />
                 </Box>
               </ExpansionPanelDetails>
             </ExpansionPanel>

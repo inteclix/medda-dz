@@ -3,6 +3,8 @@ module.exports = (sequelize, Sequelize) => {
 
   secretary.associate = (models) => {
     secretary.belongsTo(models.user);
+    secretary.belongsTo(models.clinic);
+
   };
 
   return secretary;

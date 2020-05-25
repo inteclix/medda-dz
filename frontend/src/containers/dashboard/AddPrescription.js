@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Box, Typography, Paper, Grid } from "@material-ui/core";
+import { Box, Typography, Button, Grid } from "@material-ui/core";
 import MaterialTable from "components/MaterialTable";
 
 import { useAppStore } from "stores";
@@ -11,6 +11,8 @@ import WidgetsIcon from "@material-ui/icons/Widgets";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import throttle from "lodash/throttle";
+
+import PrintPrescription from "components/PrintPrescription";
 
 class PMedicament {
   constructor(
@@ -56,10 +58,10 @@ class Prescription {
   }
 }
 
-export default function AddPrescription({ form }) {
+export default function AddPrescription({ form, patient }) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const { api } = useAppStore();
+  const { user} = useAppStore();
   const [pMedicaments, setPMedicaments] = React.useState([]);
   window.form = form;
   React.useEffect(() => {
@@ -113,8 +115,32 @@ export default function AddPrescription({ form }) {
     },
   ];
   return (
+    
     <Box>
       {prescriptionRowForm.map((row, index) => renderField(row, form, index))}
+      <PrintPrescription
+      doctor={{
+        fullName: user.gender === "man" ? `Mr. ${user.firstname} ${user.lastname}`: `Mme. ${user.firstname} ${user.lastname}`,
+        speciality: user.doctor.speciality,
+        univ: "",
+        clinicName: user[user.is].clinic.name,
+        address: user[user.is].clinic.address,
+        wilaya: "Bordj bou arreridj",
+        tel1: "021000101",
+        tel2: "021000102",
+      }}
+        patient={{ fullName: "Mr Mohamed lahcen", age: 57, weight: 67 }}
+        medicaments={[
+          {
+            name: "Dolipran",
+            dosage: "1p pour chaque jours",
+            mention: "QSP 8jours",
+          },
+        ]}
+        comment="this is a comment"
+      >
+        <Button>Print</Button>
+      </PrintPrescription>
       <MaterialTable
         padding={1}
         search={false}
