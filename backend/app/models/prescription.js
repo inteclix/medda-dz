@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
   const prescription = sequelize.define("prescriptions", {
-    description: {
-      type: Sequelize.STRING,
-    },
     comment: {
       type: Sequelize.STRING,
     },

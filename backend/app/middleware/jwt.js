@@ -23,7 +23,7 @@ exports.verifyToken = (req, res, next) => {
         include: [
           {
             model: db.doctor,
-            include: db.clinic,
+            include: [db.clinic, db.speciality],
           },
           {
             model: db.secretary,

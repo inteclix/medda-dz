@@ -5,7 +5,7 @@ import List from "./List";
 import Add from "./Add";
 import Edit from "./Edit";
 import AddConsulation from "./AddCons";
-import EditConsulation from "./EditConsulation";
+import EditConsulation from "./AddCons";
 
 const routes = [
   {

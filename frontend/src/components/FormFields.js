@@ -46,12 +46,13 @@ export const renderField = (field, form, index, row) => {
       >
         <Controller
           as={TextField}
+          autoFocus={field.autoFocus}
           fullWidth
           type={field.type}
           control={control}
           required={field.rules ? true : false}
           name={field.name ? field.name : field.code}
-          defaultValue={row ? row[field.name] : ""}
+          defaultValue={field.defaultValue ? field.defaultValue : ""}
           label={field.placeholder ? field.placeholder : field.label}
           rules={field.rules}
         />
@@ -71,12 +72,13 @@ export const renderField = (field, form, index, row) => {
       >
         <Controller
           as={TextField}
+          autoFocus={field.autoFocus}
           fullWidth
           type={"number"}
           control={control}
           required={field.rules ? true : false}
           name={field.name ? field.name : field.code}
-          defaultValue={row ? row[field.name] : ""}
+          defaultValue={field.defaultValue ? field.defaultValue : ""}
           label={field.placeholder}
           rules={field.rules}
         />
@@ -95,13 +97,14 @@ export const renderField = (field, form, index, row) => {
         error={Boolean(errors[field.name])}
       >
         <Controller
+          autoFocus={field.autoFocus}
           as={DatePicker}
           fullWidth
           format="DD-MM-YYYY"
           control={control}
           required={field.rules ? true : false}
           name={field.name}
-          defaultValue={row ? row[field.name] : new Date()}
+          defaultValue={field.defaultValue ? field.defaultValue : new Date()}
           label={field.placeholder}
           rules={field.rules}
           InputLabelProps={{
@@ -123,10 +126,11 @@ export const renderField = (field, form, index, row) => {
         key={index}
       >
         <Controller
+          autoFocus={field.autoFocus}
           as={SingleSelect}
           fullWidth
           name={field.name}
-          defaultValue={row ? row[field.name] : ""}
+          defaultValue={field.defaultValue ? field.defaultValue : "user"}
           rules={field.rules}
           control={control}
           options={field.options}
@@ -144,10 +148,10 @@ export const renderField = (field, form, index, row) => {
         <FormControlLabel
           control={
             <Controller
-              
+              autoFocus={field.autoFocus}
               as={Switch}
               name={field.name}
-              defaultValue={row ? row[field.name] : true}
+              defaultValue={field.defaultValue ? field.defaultValue : ""}
               control={control}
             />
           }

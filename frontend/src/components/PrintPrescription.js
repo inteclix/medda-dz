@@ -67,7 +67,6 @@ const styles = {
   medicament: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: "1mm",
     border: "0.1mm dashed black",
@@ -91,16 +90,15 @@ const styles = {
   },
 };
 
-class ComponentToPrint extends React.Component {
+export default class ComponentToPrint extends React.Component {
   render() {
-    const { show } = this.props;
     return (
       <div style={styles.page}>
         <div style={styles.pageBody}>
           <div style={styles.pageHeader}>
             <div>
               <div>{this.props.doctor.fullName}</div>
-              <div>{this.props.doctor.speciality}</div>
+              <div>{this.props.doctor.speciality.name}</div>
               <div style={styles.underLine}>
                 Depelome faculte de {this.props.doctor.univ}
               </div>
@@ -127,9 +125,9 @@ class ComponentToPrint extends React.Component {
           <div style={styles.patient}>
             <div>
               <div>Patient: {`${this.props.patient.fullName}`}</div>
-              <div
-                style={styles.underLine}
-              >{`${this.props.patient.age} ans, ${this.props.patient.weight} kg`}</div>
+              <div style={styles.underLine}>
+                {`${this.props.patient.age}`} ans
+              </div>
             </div>
             <div>
               <div>{`${this.props.doctor.wilaya} le:`} </div>
@@ -139,19 +137,28 @@ class ComponentToPrint extends React.Component {
             </div>
           </div>
           <div style={styles.medicaments}>
-            {this.props.medicaments &&
-              this.props.medicaments.map((m, index) => (
+            {this.props.medicaments_prescription &&
+              this.props.medicaments_prescription.map((m, index) => (
                 <div key={index} style={styles.medicament}>
-                  <div>
-                    <div>{m.name}</div>
-                    <div>{m.dosage}</div>
+                  <div style={{ flex: 4 }}>
+                    <div>
+                      <u>{m.label} </u>
+                    </div>
+                    <div>{m.medicament_prescription.posologie}</div>
                   </div>
-                  <div>{m.mention}</div>
+                  <div>
+                    <strong>
+                      [{m.medicament_prescription.number_unit}]
+                    </strong>
+                  </div>
+                  <div style={{flex: 2, textAlign: "right" }}>
+                    <span>{m.medicament_prescription.mention}</span>
+                  </div>
                 </div>
               ))}
             <div style={styles.nbMedicaments}>
               Nombers des médicaments:{" "}
-              {this.props.medicaments && this.props.medicaments.length}
+              {this.props.medicaments_prescription && this.props.medicaments_prescription.length}
             </div>
           </div>
           <div style={styles.prescription}>
@@ -193,4 +200,31 @@ class Example extends React.Component {
   }
 }
 
-export default Example;
+//export default Example;
+
+/*
+ <PrintPrescription
+        doctor={{
+          fullName:
+            user.gender === "man"
+              ? `Mr. ${user.firstname} ${user.lastname}`
+              : `Mme. ${user.firstname} ${user.lastname}`,
+          speciality: user.doctor.speciality,
+          univ: "",
+          clinicName: user[user.is].clinic.name,
+          address: user[user.is].clinic.address,
+          wilaya: "Bordj bou arreridj",
+          tel1: "021000101",
+          tel2: "021000102",
+        }}
+        patient={{ fullName: "Mr Mohamed lahcen", age: 57, weight: 67 }}
+        medicaments={[
+          {
+            name: "Dolipran",
+            posologie: "1p pour chaque jours",
+            mention: "QSP 8jours",
+          },
+        ]}
+        comment="this is a comment"
+      >
+*/

@@ -32,6 +32,7 @@ module.exports = (sequelize, Sequelize) => {
     consultation.belongsToMany(models.health_parameter, {
       through: "consultation_health_parameters",
     });
+    consultation.hasOne(models.prescription)
     consultation.belongsToMany(models.analyse, {
       through: "analyse_consultation",
     });

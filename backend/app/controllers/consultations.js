@@ -17,13 +17,17 @@ exports.getConsultationById = async (req, res) => {
         include: [
           {
             model: db.health_parameter_option,
-            attributes: ["name"],
+            attributes: ["label"],
           },
           {
             model: db.health_parameter_category,
-            attributes: ["name"],
+            attributes: ["label"],
           },
         ],
+      },
+      {
+        model: db.prescription,
+        include: db.medicament,
       },
       {
         model: db.patient,
@@ -38,25 +42,48 @@ exports.getConsultationById = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
+  // create consultation
   const consultation = await db.consultation.create(
     { ...req.body, doctorId: req.doctor.id },
     {
-      //attributes: [""],  TODO: white list for consultations
+      //attributes: [""],  TODO: white list for consultation
     }
   );
   if (!consultation) {
-    return res.status(404).send({ message: "not found" });
+    return res.status(404).send({ message: "not create consultation" });
   }
+
+  // create healthParameter
   const healthParameters = req.body.healthParameters.map((p) => {
     return { ...p, consultationId: consultation.id };
   });
   const consultationHealthPrameters = await db.consultation_health_parameter.bulkCreate(
     healthParameters
   );
-
   if (!consultationHealthPrameters) {
-    return res.status(404).send({ message: "Not found" });
+    return res.status(404).send({ message: "Not create healthParameters" });
   }
+
+  // create prescription
+  const prescription = await db.prescription.create({
+    comment: req.body.comment,
+    consultationId: consultation.id,
+  });
+  if (!prescription) {
+    return res.status(404).send({ message: "Not create prescription" });
+  }
+
+  // create medicaments
+  const medicaments_prescription = req.body.medicaments_prescription.map((m) => {
+    return { ...m.medicament_prescription, prescriptionId: prescription.id };
+  });
+  const prescriptionMedicaments = await db.medicament_prescription.bulkCreate(
+    medicaments_prescription
+  );
+  if (!prescriptionMedicaments) {
+    return res.status(404).send({ message: "Not create Medicaments" });
+  }
+
   return res.status(200).send(consultation);
 };
 
@@ -74,8 +101,8 @@ exports.updateById = async (req, res) => {
   if (!updatedConsultation) {
     return res.status(404).send({ message: "Error when update" });
   }
-  const oldParametres = await consultation.setHealth_parameters([]);
-  console.dir(oldParametres);
+
+  await consultation.setHealth_parameters([]);
 
   const healthParameters = req.body.healthParameters.map((p) => {
     return { ...p, consultationId: consultation.id };
@@ -83,10 +110,31 @@ exports.updateById = async (req, res) => {
   const consultationHealthPrameters = await db.consultation_health_parameter.bulkCreate(
     healthParameters
   );
-
   if (!consultationHealthPrameters) {
     return res.status(404).send({ message: "error when add paramaters" });
   }
+
+  // update prescription
+  const prescription = await db.prescription.update({
+    comment: req.body.comment,
+  });
+  if (!prescription) {
+    return res.status(404).send({ message: "Not update prescription" });
+  }
+
+  await prescription.setMedicament_prescriptions([]);
+
+  // create medicaments
+  const medicaments_prescription = req.body.medicaments_prescription.map((m) => {
+    return { ...m.medicament_prescription, prescriptionId: prescription.id };
+  });
+  const prescriptionMedicaments = await db.medicament_prescription.bulkCreate(
+    medicaments_prescription
+  );
+  if (!prescriptionMedicaments) {
+    return res.status(404).send({ message: "Not create Medicaments" });
+  }
+
   return res.status(200).send(consultation);
 };
 

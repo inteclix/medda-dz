@@ -61,7 +61,7 @@ class Prescription {
 export default function AddPrescription({ form, patient }) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const { user} = useAppStore();
+  const { user } = useAppStore();
   const [pMedicaments, setPMedicaments] = React.useState([]);
   window.form = form;
   React.useEffect(() => {
@@ -115,20 +115,22 @@ export default function AddPrescription({ form, patient }) {
     },
   ];
   return (
-    
     <Box>
       {prescriptionRowForm.map((row, index) => renderField(row, form, index))}
       <PrintPrescription
-      doctor={{
-        fullName: user.gender === "man" ? `Mr. ${user.firstname} ${user.lastname}`: `Mme. ${user.firstname} ${user.lastname}`,
-        speciality: user.doctor.speciality,
-        univ: "",
-        clinicName: user[user.is].clinic.name,
-        address: user[user.is].clinic.address,
-        wilaya: "Bordj bou arreridj",
-        tel1: "021000101",
-        tel2: "021000102",
-      }}
+        doctor={{
+          fullName:
+            user.gender === "man"
+              ? `Mr. ${user.firstname} ${user.lastname}`
+              : `Mme. ${user.firstname} ${user.lastname}`,
+          speciality: user.doctor.speciality,
+          univ: "",
+          clinicName: user[user.is].clinic.name,
+          address: user[user.is].clinic.address,
+          wilaya: "Bordj bou arreridj",
+          tel1: "021000101",
+          tel2: "021000102",
+        }}
         patient={{ fullName: "Mr Mohamed lahcen", age: 57, weight: 67 }}
         medicaments={[
           {

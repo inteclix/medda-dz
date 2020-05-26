@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
     mobile: {
       type: Sequelize.STRING,
     },
-    willaya: {
+    wilaya: {
       type: Sequelize.STRING,
     },
     town: {
