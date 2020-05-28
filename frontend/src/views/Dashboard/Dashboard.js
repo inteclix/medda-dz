@@ -116,7 +116,7 @@ function Dashboard(props) {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Tooltip title="Alerts • No alerts">
+                  <Tooltip title="Aucun notification">
                     <IconButton color="inherit">
                       <NotificationsIcon />
                     </IconButton>

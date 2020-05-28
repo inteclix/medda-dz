@@ -1,35 +1,33 @@
 import React from "react";
 import RoutesBuilder from "components/RoutesBuilder";
 
-import List from "./List";
-import Add from "./Add";
-import Edit from "./Edit";
-import AddConsulation from "./AddCons";
-import EditConsulation from "./AddCons";
+import ListPatientsWithConsultations from "./ListPatientsWithConsultations";
+import AddEditPatient from "./AddEditPatient";
+import AddEditConsulation from "./AddEditConsulation";
 
 const routes = [
   {
-    component: List,
+    component: ListPatientsWithConsultations,
     path: "/patients",
     exact: true,
   },
   {
-    component: Add,
+    component: AddEditPatient,
     path: "/patients/add",
     exact: true,
   },
   {
-    component: Add,
+    component: AddEditPatient,
     path: "/patients/edit/:id",
     exact: true,
   },
   {
-    component: AddConsulation,
+    component: AddEditConsulation,
     path: "/patients/:id/consultations/add",
     exact: true,
   },
   {
-    component: EditConsulation,
+    component: AddEditConsulation,
     path: "/patients/:id/consultations/:consultationId/edit",
     exact: true,
   }

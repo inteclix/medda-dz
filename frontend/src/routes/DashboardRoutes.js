@@ -1,14 +1,14 @@
 import React from "react";
 import RoutesBuilder from "components/RoutesBuilder";
 
-import Home from "views/Dashboard/Home";
+import DashboardHome from "views/Dashboard/DashboardHome";
 import Me from "views/Dashboard/Me";
 import Settings from "views/Dashboard/Settings";
 import Patients from "views/Dashboard/Patients";
 
 const routes = [
   {
-    component: Home,
+    component: DashboardHome,
     path: "/",
     exact: true,
   },

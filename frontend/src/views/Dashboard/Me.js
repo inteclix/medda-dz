@@ -1,5 +1,7 @@
 import React from "react"
-
+import Container from "components/layout/Container"
 export default ()=>(
-  <div>Mon profile view</div>
+  <Container
+    title="Mon compte"
+  >Comming soon</Container>
 )

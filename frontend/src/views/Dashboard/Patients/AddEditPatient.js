@@ -160,7 +160,17 @@ export default (props) => {
   };
 
   return (
-    <ContainerWithBack title="Ajouter un patient">
+    <ContainerWithBack
+      title={
+        patient
+          ? `Modifier Patient: ${
+              patient.firstname
+            } ${patient.lastname.toUpperCase()}`
+          : isLoading
+          ? ""
+          : "Ajouter un patient"
+      }
+    >
       {isLoading ? (
         <LinearProgress />
       ) : (

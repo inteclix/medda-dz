@@ -10,6 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
+import PersonIcon from '@material-ui/icons/Person';
 import DnsRoundedIcon from "@material-ui/icons/DnsRounded";
 import PermMediaOutlinedIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import PublicIcon from "@material-ui/icons/Public";
@@ -69,8 +70,8 @@ function Navigator(props) {
       id: "Gestions",
       children: [
         {
-          id: "Dashboard",
-          icon: <SettingsInputComponentIcon />,
+          id: "Accueil",
+          icon: <HomeIcon />,
           to: "/",
           active: location.pathname === "/",
         },
@@ -83,13 +84,19 @@ function Navigator(props) {
       ],
     },
     {
-      id: "Parameters",
+      id: "Autres",
       children: [
         {
-          id: "Comptes",
-          icon: <SettingsInputComponentIcon />,
-          to: "/accounts",
-          active: location.pathname.startsWith("/accounts"),
+          id: "Mon compte",
+          icon: <PersonIcon />,
+          to: "/me",
+          active: location.pathname.startsWith("/me"),
+        },,
+        {
+          id: "Parametres",
+          icon: <SettingsIcon />,
+          to: "/settings",
+          active: location.pathname.startsWith("/settings"),
         },
       ],
     },
@@ -101,7 +108,7 @@ function Navigator(props) {
         <ListItem
           className={clsx(classes.firebase, classes.item, classes.itemCategory)}
         >
-          Medical online
+          MEDDA-DZ
         </ListItem>
 
         {categories.map(({ id, children }) => (
