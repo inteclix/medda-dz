@@ -11,9 +11,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       unique: 1,
     },
-    permissions: {
-      type: Sequelize.STRING, // doctor secretary patient admin
-    },
     firstname: {
       type: Sequelize.STRING,
     },

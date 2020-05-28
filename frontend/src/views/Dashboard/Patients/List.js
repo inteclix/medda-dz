@@ -75,7 +75,7 @@ export default () => {
     { title: "Gender", field: "user.gender" },
   ];
   return (
-    <Container title="Patients" className={classes.root}>
+    <Container title="Patients">
       <div>
         <div className={classes.row}>
           <span className={classes.spacer} />

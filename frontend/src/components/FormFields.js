@@ -27,7 +27,7 @@ import { useForm, Controller } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({}));
 
-export const renderField = (field, form, index, row) => {
+export const renderField = (field, form, index) => {
   const { control, errors } = form;
   if (field.type === "component") {
     return field.component;
@@ -151,7 +151,13 @@ export const renderField = (field, form, index, row) => {
               autoFocus={field.autoFocus}
               as={Switch}
               name={field.name}
-              defaultValue={field.defaultValue ? field.defaultValue : ""}
+              defaultValue={
+                field.defaultValue
+                  ? field.defaultValue === "false"
+                    ? false
+                    : Boolean(field.defaultValue)
+                  : true
+              }
               control={control}
             />
           }

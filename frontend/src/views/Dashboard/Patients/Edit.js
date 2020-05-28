@@ -7,6 +7,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { useAppStore } from "stores";
 import Form from "components/Form";
+import ContainerWithBack from "components/layout/ContainerWithBack";
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -132,13 +133,7 @@ export default (props) => {
     return <LinearProgress />;
   }
   return (
-    <Paper
-      style={{ padding: 10 }}
-      display="flex"
-      flexDirection="column"
-      component={Box}
-    >
-      <Typography variant="h6">Modifier patient</Typography>
+    <ContainerWithBack title="Modifier patient">
       <Box component="form">
         <Form
           form={rowForm}
@@ -147,6 +142,6 @@ export default (props) => {
           isLoading={isLoading}
         />
       </Box>
-    </Paper>
+    </ContainerWithBack>
   );
 };

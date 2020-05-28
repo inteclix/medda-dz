@@ -140,7 +140,7 @@ const getAllDrug = async () => {
     healthParameterId: row.Parameter,
   }));
   await mysql_health_parameter_option.bulkCreate(mysql_hpos)
-  console.log(JSON.stringify(mysql_hpos, null, 2));
+  console.log("finish");
 };
 
 

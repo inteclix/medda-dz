@@ -5,7 +5,7 @@ import {
   AppBar,
   Container,
   Box,
-  IconButton ,
+  IconButton,
   Typography,
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -31,17 +31,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ({ children, title, tabsComponent }) => {
+export default ({ children, title, tabsComponent, goBack }) => {
   const classes = useStyles();
   const history = useHistory();
 
   return (
     <Box className={classes.root}>
-      <AppBar  position="sticky" elevation={0}>
+      <AppBar position="sticky" elevation={0}>
         <Box className={classes.top}>
           <IconButton
-          style={{color: "white"}}
-            onClick={() => history.goBack()}
+            style={{ color: "white" }}
+            onClick={() => (goBack ? goBack() : history.goBack())}
           >
             <ArrowBackIcon />
           </IconButton>

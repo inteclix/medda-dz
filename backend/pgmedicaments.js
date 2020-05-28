@@ -94,8 +94,7 @@ const run = async () => {
     isPsychotropic: drug.IsPsychotropic,
   }));
   const medicaments = await mysqlMedicament.bulkCreate(data);
-  console.log(medicaments);
-  //await mysqlMedicament.destroy({where:{}})
+  console.log("finish");
 };
 
 run();

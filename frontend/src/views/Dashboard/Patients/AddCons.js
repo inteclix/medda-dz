@@ -89,6 +89,7 @@ export default () => {
 
   const [consultation, setConsultation] = React.useState(null);
   const [patient, setPatient] = React.useState(null);
+  
   const { params } = useRouteMatch();
   const history = useHistory();
 
@@ -99,8 +100,9 @@ export default () => {
           .get(`/consultations/${params.consultationId}`)
           .then(({ data }) => {
             setConsultation(data); // on edit route
-            setMedicaments_prescription(data.prescription.medicaments);
             setPatient(data.patient);
+            setMedicaments_prescription(data.prescription.medicaments);
+            setHealthParameters(data.health_parameters);
             setIsLoading(false);
           })
           .catch((err) => {
@@ -134,26 +136,50 @@ export default () => {
     data["healthParameters"] = getPMValues()._healthParametersConsultation;
     data["medicaments_prescription"] = getPMValues().medicaments_prescription;
     data["patientId"] = patient.id;
-    api
-      .post("consultations", data)
-      .then(({ data }) => {
-        const message = "Consultation est enregister avec success";
-        enqueueSnackbar(message, {
-          variant: "success",
+    if (consultation) {
+      api
+        .put("consultations/" + consultation.id, data)
+        .then(({ data }) => {
+          const message = "Consultation est enregister avec success";
+          enqueueSnackbar(message, {
+            variant: "success",
+          });
+          setIsSubmitting(false);
+        })
+        .catch((err) => {
+          const message = err?.response?.data?.message || "" + err;
+          enqueueSnackbar(message, {
+            variant: "error",
+          });
+          setIsSubmitting(false);
         });
-        setIsSubmitting(false);
-        history.push(`/patients/${patient.id}/consultations/${data.id}/edit`);
-      })
-      .catch((err) => {
-        const message = err?.response?.data?.message || "" + err;
-        enqueueSnackbar(message, {
-          variant: "error",
+    } else {
+      api
+        .post("consultations", data)
+        .then(({ data }) => {
+          const message = "Consultation est enregister avec success";
+          enqueueSnackbar(message, {
+            variant: "success",
+          });
+          setIsSubmitting(false);
+          if (!consultation) {
+            history.push(
+              `/patients/${patient.id}/consultations/${data.id}/edit`
+            );
+          }
+        })
+        .catch((err) => {
+          const message = err?.response?.data?.message || "" + err;
+          enqueueSnackbar(message, {
+            variant: "error",
+          });
+          setIsSubmitting(false);
         });
-        setIsSubmitting(false);
-      });
+    }
   };
 
   const printPrescription = React.useRef();
+
   const handlePrintPrescription = useReactToPrint({
     content: () => printPrescription.current,
     onBeforeGetContent: async () =>
@@ -171,8 +197,8 @@ export default () => {
     Object.keys(hookFormData).map((key) => {
       if (key.startsWith("p__id")) {
         _healthParametersConsultation.push({
-          healthParameterId: key.slice(5),
-          value: hookFormData[key].toString(),
+          healthParameterId: Number(key.slice(5)),
+          value: String(hookFormData[key]),
         });
       }
 
@@ -230,25 +256,19 @@ export default () => {
       {
         name: "examenClinique",
         placeholder: "Examen clinique",
-        defaultValue: consultation
-          ? consultation.examenClinique
-          : "",
+        defaultValue: consultation ? consultation.examenClinique : "",
         type: "text",
       },
       {
         name: "examenParaClinique",
         placeholder: "Examen para clinique",
-        defaultValue: consultation
-          ? consultation.examenParaClinique
-          : "",
+        defaultValue: consultation ? consultation.examenParaClinique : "",
         type: "text",
       },
       {
         name: "diagnostique",
         placeholder: "Diagnostique",
-        defaultValue: consultation
-          ? consultation.diagnostique
-          : "",
+        defaultValue: consultation ? consultation.diagnostique : "",
         type: "text",
       },
       {
@@ -260,9 +280,7 @@ export default () => {
       {
         name: "examentDemander",
         placeholder: "Exament demander",
-        defaultValue: consultation
-          ? consultation.examentDemander
-          : "",
+        defaultValue: consultation ? consultation.examentDemander : "",
         type: "text",
       },
       {
@@ -323,13 +341,16 @@ export default () => {
   const renderHealthParameter = (p) => {
     let field = {
       name: "p__id" + p.id,
-      defaultValue: "",
+      defaultValue: p.consultation_health_parameters
+        ? p.consultation_health_parameters.value
+        : "",
       type: p.type,
       placeholder: p.label,
       options: p.health_parameter_options
         ? p.health_parameter_options.map((o) => o.label)
         : [],
       autoFocus: true,
+      rules: { required: "Ce champ est obligatoire" },
     };
     return (
       <Grid key={field.name} item xs={12} md={6}>
@@ -343,7 +364,7 @@ export default () => {
           padding={1}
           height={100}
         >
-          {renderField(field, hookForm, field.name + "f")}
+          {renderField(field, hookForm, field.name + "field4")}
           <IconButton
             style={{ margin: 4 }}
             onClick={() => {
@@ -481,6 +502,7 @@ export default () => {
                   defaultValue: m.medicament_prescription
                     ? m.medicament_prescription.number_unit
                     : 0,
+                  rules: { required: "Ce champ est obligatoire" },
                 },
                 hookForm,
                 "m__id__" + m.id + "__number_unit"
@@ -495,6 +517,7 @@ export default () => {
                   defaultValue: m.medicament_prescription
                     ? m.medicament_prescription.posologie
                     : "",
+                  rules: { required: "Ce champ est obligatoire" },
                 },
                 hookForm,
                 "m__id__" + m.id + "__posologie"
@@ -509,6 +532,7 @@ export default () => {
                   defaultValue: m.medicament_prescription
                     ? m.medicament_prescription.mention
                     : "",
+                  rules: { required: "Ce champ est obligatoire" },
                 },
                 hookForm,
                 "m__id__" + m.id + "__mention"
@@ -644,11 +668,12 @@ export default () => {
       </Paper>
     );
   };
-  if (isLoading) {
-    return <LinearProgress />;
-  }
+
   return (
     <ContainerWithBack
+      goBack={() => {
+        consultation ? history.replace("/patients") : history.goBack();
+      }}
       tabsComponent={() => (
         <Tabs
           textColor="inherit"
@@ -661,42 +686,58 @@ export default () => {
           <Tab textColor="inherit" label="Ordonnance" />
         </Tabs>
       )}
-      title="Ajouter une consultation"
+      title={
+        consultation && patient
+          ? `Consultation(${moment(consultation.createdAt).format(
+              "DD/MM/YYYY, h:mm a"
+            )}) pour: ${patient.user.gender === "man" ? "Mr" : "M"} ${
+              patient.user.firstname
+            } ${patient.user.lastname.toUpperCase()}`
+          : `Nouvelle consultations pour: ${
+              patient?.user.gender === "man" ? "Mr" : "M"
+            } ${patient?.user.firstname} ${patient?.user.lastname.toUpperCase()}`
+      }
     >
-      {renderConsultation()}
-      {renderHealthParameters()}
-      {renderPrescription()}
-      <div style={{ display: "none" }}>
-        <PrintPrescription
-          ref={printPrescription}
-          doctor={{
-            fullName:
-              user.gender === "man"
-                ? `Mr. ${user.firstname} ${user.lastname.toUpperCase()}`
-                : `Mme. ${user.firstname} ${user.lastname.toUpperCase()}`,
-            speciality: user.doctor.speciality,
-            univ: "",
-            clinicName: user[user.is].clinic.name,
-            address: user[user.is].clinic.address,
-            wilaya: user[user.is].clinic.wilaya,
-            tel1: user[user.is].clinic.mobile,
-            tel2: user[user.is].clinic.tel,
-          }}
-          patient={{
-            fullName:
-              patient.user.gender === "man"
-                ? `Mr. ${
-                    patient.user.firstname
-                  } ${patient.user.lastname.toUpperCase()}`
-                : `Mme. ${
-                    patient.user.firstname
-                  } ${patient.user.lastname.toUpperCase()}`,
-            age: moment().diff(moment(patient.user.dateBirth), "years"),
-          }}
-          medicaments_prescription={formValues.medicaments_prescription}
-          comment={formValues.comment}
-        />
-      </div>
+      {isLoading ? (
+        <LinearProgress />
+      ) : (
+        <>
+          {renderConsultation()}
+          {renderHealthParameters()}
+          {renderPrescription()}
+          <div style={{ display: "none" }}>
+            <PrintPrescription
+              ref={printPrescription}
+              doctor={{
+                fullName:
+                  user.gender === "man"
+                    ? `Mr. ${user.firstname} ${user.lastname.toUpperCase()}`
+                    : `Mme. ${user.firstname} ${user.lastname.toUpperCase()}`,
+                speciality: user.doctor.speciality,
+                univ: "",
+                clinicName: user[user.is].clinic.name,
+                address: user[user.is].clinic.address,
+                wilaya: user[user.is].clinic.wilaya,
+                tel1: user[user.is].clinic.mobile,
+                tel2: user[user.is].clinic.tel,
+              }}
+              patient={{
+                fullName:
+                  patient.user.gender === "man"
+                    ? `Mr. ${
+                        patient.user.firstname
+                      } ${patient.user.lastname.toUpperCase()}`
+                    : `Mme. ${
+                        patient.user.firstname
+                      } ${patient.user.lastname.toUpperCase()}`,
+                age: moment().diff(moment(patient.user.dateBirth), "years"),
+              }}
+              medicaments_prescription={formValues.medicaments_prescription}
+              comment={formValues.comment}
+            />
+          </div>
+        </>
+      )}
     </ContainerWithBack>
   );
 };

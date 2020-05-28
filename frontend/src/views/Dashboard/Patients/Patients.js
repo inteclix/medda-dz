@@ -19,7 +19,7 @@ const routes = [
     exact: true,
   },
   {
-    component: Edit,
+    component: Add,
     path: "/patients/edit/:id",
     exact: true,
   },
