@@ -10,7 +10,7 @@ import match from "autosuggest-highlight/match";
 
 import { useAppStore } from "stores";
 
-export default ({ url, textFieldProps, optionLabel, ...props }) => {
+export default ({ url, textFieldProps, optionLabel,defaultValue, ...props }) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
@@ -26,8 +26,11 @@ export default ({ url, textFieldProps, optionLabel, ...props }) => {
   );
   React.useEffect(() => {
     let active = true;
+    if(defaultValue){
+      setInputValue(defaultValue);
+    }
     if (inputValue === "") {
-      setOptions([]);
+      //setOptions([]);
       setLoading(false);
       return;
     }
@@ -59,7 +62,6 @@ export default ({ url, textFieldProps, optionLabel, ...props }) => {
       onClose={() => {
         setOpen(false);
       }}
-      autoComplete
       includeInputInList
       options={options}
       loading={loading}
@@ -86,8 +88,17 @@ export default ({ url, textFieldProps, optionLabel, ...props }) => {
         />
       )}
       renderOption={(option) => {
-        const matches = match(optionLabel ? option[optionLabel]:option, inputValue.toUpperCase());
-        const parts = parse(optionLabel ? option[optionLabel]:option, matches);
+        if (props.renderOption) {
+          return props.renderOption();
+        }
+        const matches = match(
+          optionLabel ? option[optionLabel] : option,
+          inputValue.toUpperCase()
+        );
+        const parts = parse(
+          optionLabel ? option[optionLabel] : option,
+          matches
+        );
         return (
           <Typography>
             {parts.map((part, index) => (
@@ -104,12 +115,8 @@ export default ({ url, textFieldProps, optionLabel, ...props }) => {
       {...props}
       onChange={(event, value) => {
         props.onChange(event, value);
-        console.log("clearOnSelect");
-        props.clearOnSelect && setInputValue("");
       }}
-      getOptionSelected={(option, value) =>
-        option.id === value.id
-      }
+      getOptionSelected={(option, value) => option.id === value.id}
     />
   );
 };

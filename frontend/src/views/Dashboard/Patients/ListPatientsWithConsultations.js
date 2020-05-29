@@ -69,10 +69,10 @@ export default () => {
   };
   useEffect(getPatients, []);
   const columns = [
-    { title: "First name", field: "user.firstname" },
-    { title: "Last name", field: "user.lastname" },
-    { title: "Mobile phone", field: "user.mobile" },
-    { title: "Gender", field: "user.gender" },
+    { title: "Nom", field: "user.firstname" },
+    { title: "Prénom", field: "user.lastname" },
+    { title: "Tel mobile", field: "user.mobile" },
+    { title: "Sexe", field: "user.gender", lookup:{man: "Home", woman: "Female"} },
   ];
   return (
     <Container title="Patients">

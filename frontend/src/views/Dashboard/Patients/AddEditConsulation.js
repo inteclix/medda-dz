@@ -89,7 +89,7 @@ export default () => {
 
   const [consultation, setConsultation] = React.useState(null);
   const [patient, setPatient] = React.useState(null);
-  
+
   const { params } = useRouteMatch();
   const history = useHistory();
 
@@ -306,7 +306,7 @@ export default () => {
               <Grid item></Grid>
               <Grid item xs></Grid>
               <Grid item>
-                <IconButton>
+                <IconButton disabled>
                   <PrintIcon className={classes.block} color="inherit" />
                 </IconButton>
               </Grid>
@@ -424,7 +424,7 @@ export default () => {
                 />
               </Grid>
               <Grid item>
-                <IconButton>
+                <IconButton disabled>
                   <PrintIcon className={classes.block} color="inherit" />
                 </IconButton>
               </Grid>
@@ -695,7 +695,9 @@ export default () => {
             } ${patient.user.lastname.toUpperCase()}`
           : `Nouvelle consultations pour: ${
               patient?.user.gender === "man" ? "Mr" : "M"
-            } ${patient?.user.firstname} ${patient?.user.lastname.toUpperCase()}`
+            } ${
+              patient?.user.firstname
+            } ${patient?.user.lastname.toUpperCase()}`
       }
     >
       {isLoading ? (

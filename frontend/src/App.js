@@ -45,7 +45,7 @@ function App() {
   }
   if (user) {
     return (
-      <AppProvider value={{ user, api, setToken }}>
+      <AppProvider value={{ user, setUser, api, setToken }}>
         <AppContainer>
           <Dashboard />
         </AppContainer>

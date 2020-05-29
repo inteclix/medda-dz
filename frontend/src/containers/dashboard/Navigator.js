@@ -108,7 +108,7 @@ function Navigator(props) {
         <ListItem
           className={clsx(classes.firebase, classes.item, classes.itemCategory)}
         >
-          MEDDA-DZ
+          {""}
         </ListItem>
 
         {categories.map(({ id, children }) => (

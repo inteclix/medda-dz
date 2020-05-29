@@ -10,13 +10,13 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Avatar,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
@@ -43,7 +43,7 @@ const PatientConsultations = ({ id }) => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const getConsultations = useCallback(()=>{
+  const getConsultations = useCallback(() => {
     api
       .get(`patients/${id}/consultations`)
       .then(({ data }) => {
@@ -57,19 +57,24 @@ const PatientConsultations = ({ id }) => {
         });
         setIsLoading(false);
       });
-  })
+  });
   useEffect(() => {
-    getConsultations()
+    getConsultations();
   }, []);
   if (isLoading) {
     return <LinearProgress />;
   }
-  if(consultations.length ===0) {
+  if (consultations.length === 0) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" className={classes.root}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        className={classes.root}
+      >
         <Typography>Aucun consultation pour ce patient</Typography>
       </Box>
-    )
+    );
   }
   return (
     <List component={PerfectScrollbar} className={classes.root}>
@@ -90,13 +95,6 @@ const PatientConsultations = ({ id }) => {
                 >
                   {`Motifs: ${c.motifs}`}
                 </Typography>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  color="textPrimary"
-                >
-                  {`Diagnostique: ${c.diagnostique}`}
-                </Typography>
               </Box>
             }
             secondary={`Le ${moment(c.createdAt).format(
@@ -104,25 +102,35 @@ const PatientConsultations = ({ id }) => {
             )}`}
           />
           <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
-              <DeleteIcon onClick={()=>{
-                window.confirm("Supprimer ?") &&
-                api.delete(`consultations/${c.id}`)
-                .then(({ data }) => {
-                  enqueueSnackbar(data.message, {
-                    variant: "success",
-                  });
-                  getConsultations()
-                })
-                .catch((err) => {
-                  const message = err?.response?.data?.message || "" + err;
-                  enqueueSnackbar(message, {
-                    variant: "error",
-                  });
-                });
-              }} />
+            <IconButton>
+              <DeleteIcon
+                onClick={() => {
+                  window.confirm("Supprimer ?") &&
+                    api
+                      .delete(`consultations/${c.id}`)
+                      .then(({ data }) => {
+                        enqueueSnackbar(data.message, {
+                          variant: "success",
+                        });
+                        getConsultations();
+                      })
+                      .catch((err) => {
+                        const message =
+                          err?.response?.data?.message || "" + err;
+                        enqueueSnackbar(message, {
+                          variant: "error",
+                        });
+                      });
+                }}
+              />
             </IconButton>
-            <IconButton onClick={()=> history.push(`/patients/${id}/consultations/${c.id}/edit`)} style={{ marginLeft: ".5em" }} aria-label="edit">
+            <IconButton
+              onClick={() =>
+                history.push(`/patients/${id}/consultations/${c.id}/edit`)
+              }
+              style={{ marginLeft: ".5em" }}
+              aria-label="edit"
+            >
               <VisibilityIcon />
             </IconButton>
           </ListItemSecondaryAction>
