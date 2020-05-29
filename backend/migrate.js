@@ -1,3 +1,6 @@
-const db = require("./app/models")
+const db = require("./app/models");
 
-db.sequelize.sync({ force: true })
+const seed = async () => {
+  await db.sequelize.sync({ force: true });
+};
+seed();

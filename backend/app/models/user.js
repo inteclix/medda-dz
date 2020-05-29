@@ -54,6 +54,7 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   user.associate = (models) => {
+    user.belongsTo(models.code_postal);
     user.hasOne(models.doctor);
     user.hasOne(models.secretary);
     user.hasOne(models.patient);

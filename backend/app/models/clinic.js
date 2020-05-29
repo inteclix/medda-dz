@@ -16,12 +16,6 @@ module.exports = (sequelize, Sequelize) => {
     mobile: {
       type: Sequelize.STRING,
     },
-    wilaya: {
-      type: Sequelize.STRING,
-    },
-    town: {
-      type: Sequelize.STRING,
-    },
     logo: {
       type: Sequelize.STRING,
     },
@@ -34,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
   });
   
   clinic.associate = (models) => {
+    clinic.belongsTo(models.code_postal);
     clinic.hasMany(models.secretary);
     clinic.hasMany(models.doctor);
     clinic.hasMany(models.appointment);

@@ -23,7 +23,13 @@ exports.verifyToken = (req, res, next) => {
         include: [
           {
             model: db.doctor,
-            include: [db.clinic, db.speciality],
+            include: [
+              {
+                model: db.clinic,
+                include: db.code_postal,
+              },
+              db.speciality,
+            ],
           },
           {
             model: db.secretary,
@@ -32,12 +38,15 @@ exports.verifyToken = (req, res, next) => {
           {
             model: db.patient,
           },
+          {
+            model: db.code_postal,
+          },
         ],
       });
       req.user = user;
       return next();
     } catch (err) {
-      return res.status(404).send({ message: "error on server"})
+      return res.status(404).send({ message: "error on server" });
     }
   });
 };

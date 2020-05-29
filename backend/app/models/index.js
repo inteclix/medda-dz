@@ -55,6 +55,7 @@ db.prescription = require("./prescription")(sequelize, Sequelize);
 db.secretary = require("./secretary")(sequelize, Sequelize);
 db.speciality = require("./speciality")(sequelize, Sequelize);
 db.user = require("./user")(sequelize, Sequelize);
+db.code_postal = require("./code_postal")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
