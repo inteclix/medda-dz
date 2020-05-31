@@ -1,43 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
-import utils from "utils";
+
+import { useAppStore} from "stores";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const [auth, setAuth] = useState({
-    isAuth: false,
-    isLoading: true,
-  });
+  const {user} = useAppStore()
   const location = useLocation();
-  useEffect(() => {
-    utils.isLogin().then(() => {
-      setAuth({
-        isAuth: true,
-        isLoading: false,
-      });
-      console.log("check route if is authorize: " + location.pathname);
-    });
-    return () => {
-      setAuth({
-        isAuth: false,
-        isLoading: true,
-      });
-    };
-  }, [location]);
-  if (auth.isLoading) {
-    return <div>Loading ...</div>;
-  }
-  if (
-    auth.isAuth &&
-    (location.pathname === "/signin" || location.pathname === "/signup")
-  ) {
+
+  if (location.pathname === "/signin" || location.pathname === "/signup") {
     return <Redirect to="/" />;
   }
-
+  const checkUserAndToekn = () =>{
+    return Boolean(user) // TODO: check if token is valid
+  }
   return (
     <Route
       {...rest}
       render={(props) =>
-        auth.isAuth ? <Component {...props} /> : <Redirect to="/signin" />
+        checkUserAndToekn() ? <Component {...props} /> : <Redirect to="/signin" />
       }
     />
   );

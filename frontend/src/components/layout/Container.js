@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     marginTop: theme.spacing(1),
-    minHeight: 500,
+    minHeight: 800,
   },
   top: {
     display: "flex",

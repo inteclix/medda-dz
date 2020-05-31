@@ -4,6 +4,7 @@ import { SnackbarProvider } from "notistack";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { LinearProgress } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 import Dashboard from "views/Dashboard";
 import Others from "views/Others";
@@ -11,15 +12,18 @@ import Others from "views/Others";
 import useApi from "hooks/useApi";
 import { AppProvider } from "stores";
 import ScrollToTopOnLocationChange from "components/ScrollToTopOnLocationChange";
+import theme from "./theme";
 
 const AppContainer = ({ children }) => (
-  <MuiPickersUtilsProvider utils={MomentUtils}>
-    <SnackbarProvider maxSnack={3}>
-      <BrowserRouter>
-        <ScrollToTopOnLocationChange>{children}</ScrollToTopOnLocationChange>
-      </BrowserRouter>
-    </SnackbarProvider>
-  </MuiPickersUtilsProvider>
+  <ThemeProvider theme={theme}>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <SnackbarProvider maxSnack={3}>
+        <BrowserRouter>
+          <ScrollToTopOnLocationChange>{children}</ScrollToTopOnLocationChange>
+        </BrowserRouter>
+      </SnackbarProvider>
+    </MuiPickersUtilsProvider>
+  </ThemeProvider>
 );
 
 function App() {

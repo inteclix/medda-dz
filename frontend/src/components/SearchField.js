@@ -10,7 +10,13 @@ import match from "autosuggest-highlight/match";
 
 import { useAppStore } from "stores";
 
-export default ({ url, textFieldProps, optionLabel,defaultValue, ...props }) => {
+export default ({
+  url,
+  textFieldProps,
+  optionLabel,
+  defaultValue,
+  ...props
+}) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
@@ -26,7 +32,7 @@ export default ({ url, textFieldProps, optionLabel,defaultValue, ...props }) => 
   );
   React.useEffect(() => {
     let active = true;
-    if(defaultValue){
+    if (defaultValue) {
       setInputValue(defaultValue);
     }
     if (inputValue === "") {
@@ -88,13 +94,10 @@ export default ({ url, textFieldProps, optionLabel,defaultValue, ...props }) => 
         />
       )}
       renderOption={(option) => {
-        if (props.renderOption) {
-          return props.renderOption();
-        }
-        const matches = match(
-          optionLabel ? option[optionLabel] : option,
-          inputValue.toUpperCase()
-        );
+          const matches = match(
+            optionLabel ? option[optionLabel] : option,
+            inputValue.toUpperCase()
+          );
         const parts = parse(
           optionLabel ? option[optionLabel] : option,
           matches

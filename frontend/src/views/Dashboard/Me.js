@@ -261,7 +261,6 @@ export default (props) => {
             onChange={(event, value) => {
               value && hookForm.setValue("codePostal", value.id);
             }}
-            defaultValue={user?.doctor?.clinic?.code_postal?.codePostal}
             renderOption={(option, inputValue) => {
               const matches = match(
                 option.codePostal,
