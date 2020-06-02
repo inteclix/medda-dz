@@ -10,9 +10,10 @@ import {
   CardActionArea,
   CardMedia,
   CardContent,
-  CardActions,
+  Link,
   makeStyles,
 } from "@material-ui/core";
+import Copyright from "containers/Copyright";
 
 const CardImage = ({ title, text, image }) => (
   <Grid item spacing={1} xs={12} sm={6} md={4}>
@@ -117,7 +118,7 @@ export default () => {
         </Box>
         <Box marginTop={4} marginBottom={1}>
           <Typography variant="h4">
-            Logiciel de gestion de cabinet médical et clinique online
+            Gestion de cabinet médical et clinique online
           </Typography>
           <Typography>
             Gagnez du temps, réduisez l'erreur et assurez une meilleure qualité
@@ -150,7 +151,7 @@ export default () => {
           <Typography variant="h5">
             Avec <span style={{ fontWeight: 700 }}>MEDDA</span>, vous êtes
             présent pour vos patients lorsqu’ils ont besoin de vous, n’importe
-            quand, n’importe où en Algérie.
+            quand, n’importe où.
           </Typography>
         </Box>
         <Grid xs={12} spacing={2} container>
@@ -159,7 +160,13 @@ export default () => {
           ))}
         </Grid>
       </Container>
-      <Box className={classes.footer} />
+      <Box className={classes.footer}>
+        <Typography style={{ textAlign: "center" }}>
+        {"</>"} (developed) with ❤ by{" "}
+          <Link color="inherit" href="https://twitter.com/seddikBENZEMAME" target="_blank">@seddikBENZEMAME</Link>
+        </Typography>
+        <Copyright />
+      </Box>
     </Box>
   );
 };

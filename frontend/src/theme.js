@@ -46,11 +46,11 @@ theme = {
         textTransform: "none",
       },
       contained: {
-        boxShadow: "none",
-        "&:active": {
-          boxShadow: "none",
-        },
+        borderRadius: 24,
       },
+      outlined:{ 
+        borderRadius: 24,
+      }
     },
     MuiTabs: {
       root: {
