@@ -1,78 +1,67 @@
-import React, { useEffect, useState } from "react";
-import {
-  Paper,
-  TextField,
-  Link,
-  makeStyles,
-  Typography,
-  Toolbar,
-  Button,
-  Grid,
-  Box,
-} from "@material-ui/core";
-import { motion } from "framer-motion";
-
+import React from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import {
+  makeStyles,
+  Grid,
+  Box,
+  Paper,
+  Hidden,
+  Typography,
+  Button,
+  Link,
+} from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import Form from "components/Form";
-import authenticationSVG from "assets/authentication.svg";
-import doctorsSVG from "assets/doctors.svg";
+
+import { renderField } from "components/FormFields";
 
 import { useAppStore } from "stores";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flex: 1,
-    height: "100vh",
-  },
-  submit: {
-    marginTop: theme.spacing(2),
-  },
-  searchBar: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  },
   left: {
+    overflowY: "auto",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
-    flex: 2,
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
+    padding: theme.spacing(1),
   },
   right: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
     padding: theme.spacing(1),
     background: "linear-gradient(to right, #e6e8f9 0%, #f4f6f8)",
     boxShadow: "5px 0px 25px 0px #0000007d",
-    height: "100%",
     overflowY: "auto",
+    justifyContent: "center",
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "flex-start",
+    },
+    height: "100%",
   },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    elevation: 2,
+  authenticationImage: {
+    width: "100%",
+    [theme.breakpoints.down("xs")]: {
+      //display: "none"
+    },
   },
-  authenticationSVG: {
-    height: 200,
-    margin: theme.spacing(2),
-  },
-  doctorsSVG: {
-    height: 500,
+  doctorsImage: {
+    width: "calc(100% - 80px)",
   },
 }));
+
+const authenticationImage = require("assets/authentication.svg");
+const doctorsImage = require("assets/doctors.svg");
+
 export default () => {
   const classes = useStyles();
-  const [specialities, setSpecialities] = useState([]);
-  const { enqueueSnackbar } = useSnackbar();
-  const { handleSubmit, control, errors } = useForm();
   const { api, setToken } = useAppStore();
+  const hookForm = useForm();
+  const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
+  const [specialities, setSpecialities] = React.useState([]);
+
+  React.useEffect(() => {
     let mounted = true;
     api
       .get("/specialities")
@@ -95,7 +84,7 @@ export default () => {
     };
   }, []);
 
-  const submit = (data) => {
+  const onSubmit = (data) => {
     api
       .post("auth/signin", data)
       .then(({ data }) => {
@@ -111,74 +100,69 @@ export default () => {
         });
       });
   };
-  const signupForm = [
+
+  const signinForm = [
     {
       name: "username",
       placeholder: "Nom d'utilisateur",
       type: "text",
       rules: { required: "This field is required" },
-      style: { width: "100%" },
     },
     {
       name: "password",
       placeholder: "Mot de pass",
       type: "password",
       rules: { required: "This field is required" },
-      style: { width: "100%" },
     },
   ];
+
   return (
-    <Grid container className={classes.root}>
-      <Grid className={classes.left}>
-        <motion.div
-          animate={{ scale: 0.95, rotate: 0.5, opacity: 0.8 }}
-          transition={{
-            yoyo: Infinity,
-            duration: 4,
-            ease: "easeInOut",
-          }}
-        >
-          <img className={classes.doctorsSVG} src={doctorsSVG} />
-        </motion.div>
-        <Typography variant="h5">
-          ❝ MEDDA la première application ❤ médical online en ALGERIE ❞
-        </Typography>
-      </Grid>
-
-      <Grid component={PerfectScrollbar} className={classes.right} item>
-        <motion.div
-        style={{display: "flex", alignItems: "center", justifyContent:"center "}}
-          animate={{ scale: 0.98, rotate: 0.5, opacity: 0.8 }}
-          transition={{
-            yoyo: Infinity,
-            duration: 2,
-            ease: "easeInOut",
-          }}
-        >
-          <img src={authenticationSVG} className={classes.authenticationSVG} />
-        </motion.div>
-        <Paper className={classes.form}>
-          <Typography variant="h6">Connecté à MEDDA</Typography>
-
-          <Box
-            marginBottom={2}
-            marginTop={2}
-            component="form"
-            display="flex"
-            flexDirection="column"
-          >
-            <Form form={signupForm} onSubmit={submit} submitText="Connecté" />
+    <Grid container style={{ height: "100vh" }}>
+      <Hidden xsDown>
+        <Grid item sm={7} md={8} className={classes.left}>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <img className={classes.doctorsImage} src={doctorsImage} />
           </Box>
-
-          <Link
-            to="/signup"
-            component={LinkRouter}
-            variant="subtitle1"
-            style={{ textAlign: "right" }}
+          <Typography style={{ textAlign: "center" }}>
+            {"</>"} (developed) with ❤ by{" "}
+            <Link
+              color="inherit"
+              href="https://twitter.com/seddikBENZEMAME"
+              target="_blank"
+            >
+              @seddikBENZEMAME
+            </Link>
+          </Typography>
+        </Grid>
+      </Hidden>
+      <Grid item xs={12} sm={5} md={4} className={classes.right} component={PerfectScrollbar}>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <img
+            className={classes.authenticationImage}
+            src={authenticationImage}
+          />
+        </Box>
+        <Paper style={{ padding: 8, marginTop: 8 }} component="form">
+          {signinForm.map((field, index) =>
+            renderField(field, hookForm, index)
+          )}
+          <Button
+            onClick={hookForm.handleSubmit(onSubmit)}
+            style={{ width: "100%" }}
+            variant="contained"
+            color="primary"
           >
-            Vous n'avez pas encore de compte?
-          </Link>
+            Connecté
+          </Button>
         </Paper>
+        <Link
+          to="/signup"
+          component={LinkRouter}
+          variant="subtitle1"
+          style={{ textAlign: "right" }}
+        >
+          Vous n'avez pas encore de compte?
+        </Link>
       </Grid>
     </Grid>
   );

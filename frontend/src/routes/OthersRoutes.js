@@ -4,7 +4,7 @@ import { Route, Redirect, useLocation } from "react-router-dom";
 import RoutesBuilder from "components/RoutesBuilder";
 
 import Home from "views/Others/Home";
-import Signin from "views/Others/Signin2";
+import Signin from "views/Others/Signin";
 import Signup from "views/Others/Signup";
 
 const routes = [
