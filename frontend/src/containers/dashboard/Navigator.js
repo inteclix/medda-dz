@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from '@material-ui/icons/Person';
-import DnsRoundedIcon from "@material-ui/icons/DnsRounded";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import PermMediaOutlinedIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import PublicIcon from "@material-ui/icons/Public";
 import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet";
@@ -80,6 +80,12 @@ function Navigator(props) {
           icon: <PeopleIcon />,
           active: location.pathname.startsWith("/patients"),
           to: "/patients",
+        },
+        {
+          id: "Rendez-vous",
+          icon: <AccessTimeIcon />,
+          active: location.pathname.startsWith("/appointments"),
+          to: "/appointments",
         },
       ],
     },
