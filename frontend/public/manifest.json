@@ -1,5 +1,5 @@
 {
-  "short_name": "Medda-dz",
+  "short_name": "medda-dz",
   "name": "Gestion medicale online",
   "icons": [
     {
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#e6e8f9",
+  "background_color": "#e6e8f9"
 }

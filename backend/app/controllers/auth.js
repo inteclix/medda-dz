@@ -6,9 +6,75 @@ const User = db.user;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-exports.me = (req, res) => {
+exports.getMe = (req, res) => {
   return res.status(200).send(req.user)
 };
+
+exports.updateMe = async (req, res) => {
+  console.log(req.body)
+  const user = await db.user.findByPk(req.user.id, {
+    include: [
+      {
+        model: db.doctor,
+        include: [
+          {
+            model: db.clinic,
+            include: db.code_postal,
+          },
+          db.speciality,
+        ],
+      },
+      {
+        model: db.secretary,
+        include: db.clinic,
+      },
+      {
+        model: db.patient,
+      },
+      {
+        model: db.code_postal,
+      },
+    ],
+  });
+  if (!user) {
+    return res.status(404).send({ message: "user not found" })
+  }
+  try {
+    await user.update(req.body) 
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    return res.status(404).send({ message: "something got wrong!" })
+  }
+  const updatedUser = await db.user.findByPk(req.user.id, {
+    include: [
+      {
+        model: db.doctor,
+        include: [
+          {
+            model: db.clinic,
+            include: db.code_postal,
+          },
+          db.speciality,
+        ],
+      },
+      {
+        model: db.secretary,
+        include: db.clinic,
+      },
+      {
+        model: db.patient,
+      },
+      {
+        model: db.code_postal,
+      },
+    ],
+  });
+    if (!updatedUser) {
+    return res.status(404).send({ message: "some thing got wrong" })
+  }
+  return res.status(200).send(updatedUser)
+};
+
 
 exports.signup = async (req, res) => {
   if (req.body.is === "doctor" && req.body.specialityId) {

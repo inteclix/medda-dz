@@ -40,6 +40,7 @@ export default (props) => {
   const [specialities, setSpecialities] = useState([]);
   const hookForm = useForm();
   window.hookForm = hookForm;
+
   React.useEffect(() => {
     const loadSpecialities = async () => {
       await api
@@ -180,12 +181,13 @@ export default (props) => {
       // me form
       api
         .put("auth/me", data)
-        .then(() => {
+        .then(({data}) => {
           const message = "me updated";
           enqueueSnackbar(message, {
             variant: "success",
           });
           setIsSubmitting(false);
+          setUser(data)
         })
         .catch((err) => {
           const message = err?.response?.data?.message || "" + err;
@@ -205,6 +207,7 @@ export default (props) => {
   };
 
   const renderMe = () => {
+    hookForm.register("codePostalId");
     return (
       <Grid container spacing={1}>
         {meForm.map((field, index) => {
@@ -217,6 +220,45 @@ export default (props) => {
             </Grid>
           );
         })}
+                <Grid item xs={12} md={6}>
+          <SearchField
+            url="codepostals"
+            optionLabel="codePostal"
+            textFieldProps={{
+              placeholder: "Code postal",
+            }}
+            getOptionLabel={(option) =>
+              option.codePostal ? option.codePostal : ""
+            }
+            onChange={(event, value) => {
+              value && hookForm.setValue("codePostalId", value.id);
+            }}
+            renderOption={(option, inputValue) => {
+              const matches = match(
+                option.codePostal,
+                inputValue.inputValue.toUpperCase()
+              );
+              const parts = parse(option.codePostal, matches);
+              return (
+                <Box flexDirection="column">
+                  <Typography>
+                    {parts.map((part, index) => (
+                      <span
+                        key={index}
+                        style={{ fontWeight: part.highlight ? 700 : 400 }}
+                      >
+                        {part.text}
+                      </span>
+                    ))}
+                  </Typography>
+                  <Typography>
+                    {option.label + " - " + option.wilaya}
+                  </Typography>
+                </Box>
+              );
+            }}
+          />
+        </Grid>
         <Grid item xs={12} md={12}>
           <Divider />
         </Grid>
@@ -259,7 +301,7 @@ export default (props) => {
               option.codePostal ? option.codePostal : ""
             }
             onChange={(event, value) => {
-              value && hookForm.setValue("codePostal", value.id);
+              value && hookForm.setValue("codePostalId", value.id);
             }}
             renderOption={(option, inputValue) => {
               const matches = match(
@@ -312,8 +354,8 @@ export default (props) => {
           onChange={handleChangeTab}
           aria-label="me-tabs"
         >
-          <Tab textColor="inherit" label="Mon compte" />
-          <Tab textColor="inherit" label="Mon clinic" />
+          <Tab textColor="inherit" label="Informations sur le médecin" />
+          <Tab textColor="inherit" label="Informations sur la clinique" />
           <Tab textColor="inherit" label="Changement de mot de pass" />
         </Tabs>
       )}
