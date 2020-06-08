@@ -69,7 +69,7 @@ export default () => {
       .then(({ data }) => {
         if (mounted) {
           const spes = data.map((s) => {
-            return { label: s.name, value: s.id };
+            return { label: s.label, value: s.id };
           });
           setSpecialities(spes);
         }

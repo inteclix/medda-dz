@@ -47,7 +47,7 @@ export default (props) => {
         .get("/specialities")
         .then(({ data }) => {
           const spes = data.map((s) => {
-            return { label: s.name, value: s.id };
+            return { label: s.label, value: s.id };
           });
           setSpecialities(spes);
           setIsLoading(false);
@@ -148,14 +148,14 @@ export default (props) => {
 
   const clinicForm = [
     {
-      name: "clinicName",
+      name: "name",
       placeholder: "Nom de clinic",
       type: "text",
       rules: { required: "Ce champ est obligatoire" },
       defaultValue: me ? me?.doctor?.clinic?.name : "",
     },
     {
-      name: "clinicAddress",
+      name: "address",
       placeholder: "Address de clinic",
       type: "text",
       rules: { required: "Ce champ est obligatoire" },
@@ -181,13 +181,13 @@ export default (props) => {
       // me form
       api
         .put("auth/me", data)
-        .then(({data}) => {
+        .then(({ data }) => {
           const message = "me updated";
           enqueueSnackbar(message, {
             variant: "success",
           });
           setIsSubmitting(false);
-          setUser(data)
+          setUser(data);
         })
         .catch((err) => {
           const message = err?.response?.data?.message || "" + err;
@@ -199,7 +199,23 @@ export default (props) => {
     }
     if (tabValue === 1) {
       // clinic form
-      //api.put("auth/me")
+      api
+        .put("/clinics/" + me?.doctor?.clinic?.id, data)
+        .then(({ data }) => {
+          const message = "me updated";
+          enqueueSnackbar(message, {
+            variant: "success",
+          });
+          setIsSubmitting(false);
+          setUser(data);
+        })
+        .catch((err) => {
+          const message = err?.response?.data?.message || "" + err;
+          enqueueSnackbar(message, {
+            variant: "error",
+          });
+          setIsSubmitting(false);
+        });
     }
     if (tabValue === 2) {
       // password change form
@@ -220,7 +236,7 @@ export default (props) => {
             </Grid>
           );
         })}
-                <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <SearchField
             url="codepostals"
             optionLabel="codePostal"
@@ -354,7 +370,7 @@ export default (props) => {
           onChange={handleChangeTab}
           aria-label="me-tabs"
         >
-          <Tab textColor="inherit" label="Informations sur le médecin" />
+          <Tab textColor="inherit" label="Votre information" />
           <Tab textColor="inherit" label="Informations sur la clinique" />
           <Tab textColor="inherit" label="Changement de mot de pass" />
         </Tabs>

@@ -6,32 +6,39 @@ exports.isDoctor = async (req, res, next) => {
       message: "Un autorization",
     });
   }
-  const doctor = await db.doctor.findOne({ where: { userId: req.userId } })
+  const doctor = await db.doctor.findOne({ where: { userId: req.userId } });
   if (!doctor) {
-    return res.status(401).send({message: "Un autorization"});
+    return res.status(401).send({ message: "Un autorization" });
   }
   req.doctor = doctor;
   next();
   return;
 };
 
-exports.isAdminDoctor = (req, res, next) => {
-  if (req.user.role !== "doctor") {
+exports.isAdminDoctor = async (req, res, next) => {
+  if (req.user.is !== "doctor") {
     return res.status(401).send({
       message: "Un autorization",
     });
   }
-  db.doctor
+    
+  try {
+    const doctor = await db.doctor
     .findOne({
-      where: { userId: req.userId, isAdmin: true },
+      where: { userId: req.user.id, isAdmin: true },
     })
-    .then((doctor) => {
-      req.doctor = doctor;
-      next();
-    })
-    .catch(() => {
-      return res.status(401).send({
-        message: "Un autorization",
-      });
+    if(!doctor){
+      return res.status(401).send({message: "Not autorized"})
+    }
+    req.doctor = doctor;
+    next();
+  } catch (error) {
+    console.log(error, null, 2)
+    return res.status(404).send({
+      message: "Some thing got error",
     });
+  }
+  
+
+
 };

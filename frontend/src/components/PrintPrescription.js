@@ -111,7 +111,7 @@ export default class ComponentToPrint extends React.Component {
               </div>
               <div>{this.props.doctor.address}</div>
               <div style={styles.underLineTextAlignRight}>
-                {this.props.doctor.wilaya}
+                {this.props.doctor?.code_postal?.wilaya}
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default class ComponentToPrint extends React.Component {
               </div>
             </div>
             <div>
-              <div>{`${this.props.doctor.wilaya} le:`} </div>
+              <div>{`${this.props.doctor?.code_postal?.wilaya} le:`} </div>
               <div style={styles.underLineTextAlignRight}>
                 {moment(new Date()).format("DD/MM/YYYY")}
               </div>

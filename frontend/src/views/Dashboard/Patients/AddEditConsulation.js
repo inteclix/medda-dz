@@ -719,7 +719,7 @@ export default () => {
                 univ: "",
                 clinicName: user[user.is].clinic.name,
                 address: user[user.is].clinic.address,
-                wilaya: user[user.is].clinic.wilaya,
+                code_postal: user[user.is].clinic.code_postal,
                 tel1: user[user.is].clinic.mobile,
                 tel2: user[user.is].clinic.tel,
               }}
