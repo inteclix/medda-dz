@@ -249,6 +249,7 @@ export default (props) => {
             onChange={(event, value) => {
               value && hookForm.setValue("codePostalId", value.id);
             }}
+            defaultValue={me?.code_postal}
             renderOption={(option, inputValue) => {
               const matches = match(
                 option.codePostal,

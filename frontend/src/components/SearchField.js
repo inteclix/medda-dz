@@ -22,6 +22,7 @@ export default ({
   const [inputValue, setInputValue] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const { api } = useAppStore();
+  
   const fetchThrottle = React.useMemo(
     () =>
       throttle(async (search, callback) => {
@@ -30,38 +31,21 @@ export default ({
       }, 500),
     []
   );
-  React.useEffect(() => {
-    let active = true;
-    if (defaultValue) {
-      setInputValue(defaultValue);
-    }
-    if (inputValue === "") {
-      //setOptions([]);
-      setLoading(false);
-      return;
-    }
+
+  const searchValue = (inputValue) => {
     setLoading(true);
     fetchThrottle(inputValue.toUpperCase(), (data) => {
-      if (active && data) {
+      if (data) {
         setOptions(data.data);
         setLoading(false);
       }
     });
-
-    return () => {
-      active = false;
-    };
-  }, [inputValue]);
-
-  React.useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
+  }
 
   return (
     <Autocomplete
       open={open}
+      defaultValue={defaultValue}
       onOpen={() => {
         setOpen(true);
       }}
@@ -73,7 +57,8 @@ export default ({
       loading={loading}
       onInputChange={(event, newInputValue) => {
         console.log(newInputValue);
-        setInputValue(newInputValue);
+        //setInputValue(newInputValue);
+        searchValue(newInputValue)
       }}
       renderInput={(params) => (
         <TextField
