@@ -62,7 +62,13 @@ export default (props) => {
       name: "mobile",
       placeholder: "Tel mobile",
       type: "text",
-      rules: { required: "Ce champ est obligatoire" },
+      rules: {
+        required: "Ce champ est obligatoire",
+        pattern: {
+          value: /^(00213|\+213|0)(5|6|7)[0-9]{8}$/,
+          message: "Némero de TEL incorecte",
+        },
+      },
       defaultValue: patient ? patient.mobile : "",
     },
     {
@@ -76,6 +82,13 @@ export default (props) => {
       placeholder: "Email",
       type: "text",
       defaultValue: patient ? patient.email : "",
+      rules: {
+        required: "Ce champ est requis",
+        pattern: {
+          value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          message: "Email incorecte",
+        },
+      },
     },
     {
       name: "dateBirth",

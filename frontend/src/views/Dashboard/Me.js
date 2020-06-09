@@ -82,8 +82,14 @@ export default (props) => {
       name: "mobile",
       placeholder: "Tel mobile",
       type: "text",
-      rules: { required: "Ce champ est obligatoire" },
       defaultValue: me ? me.mobile : "",
+      rules: {
+        required: "Ce champ est obligatoire",
+        pattern: {
+          value: /^(00213|\+213|0)(5|6|7)[0-9]{8}$/,
+          message: "Némero de TEL incorecte",
+        },
+      },
     },
     {
       name: "tel",
@@ -96,6 +102,13 @@ export default (props) => {
       placeholder: "Email",
       type: "text",
       defaultValue: me ? me.email : "",
+      rules: {
+        required: "Ce champ est requis",
+        pattern: {
+          value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          message: "Email incorecte",
+        },
+      },
     },
     {
       name: "dateBirth",
@@ -165,7 +178,13 @@ export default (props) => {
       name: "mobile",
       placeholder: "Tel mobile",
       type: "text",
-      rules: { required: "Ce champ est obligatoire" },
+      rules: {
+        required: "Ce champ est obligatoire",
+        pattern: {
+          value: /^(00213|\+213|0)(5|6|7)[0-9]{8}$/,
+          message: "Némero de TEL incorecte",
+        },
+      },
       defaultValue: me ? me?.doctor?.clinic?.mobile : "",
     },
     {
@@ -242,6 +261,7 @@ export default (props) => {
             optionLabel="codePostal"
             textFieldProps={{
               placeholder: "Code postal",
+              label: "Code postal",
             }}
             getOptionLabel={(option) =>
               option.codePostal ? option.codePostal : ""
@@ -317,6 +337,7 @@ export default (props) => {
             getOptionLabel={(option) =>
               option.codePostal ? option.codePostal : ""
             }
+            defaultValue={me?.doctor?.clinic?.code_postal}
             onChange={(event, value) => {
               value && hookForm.setValue("codePostalId", value.id);
             }}

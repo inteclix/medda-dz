@@ -99,9 +99,11 @@ export default class ComponentToPrint extends React.Component {
             <div>
               <div>{this.props.doctor.fullName}</div>
               <div>{this.props.doctor.speciality.name}</div>
-              <div style={styles.underLine}>
-                Depelome faculte de {this.props.doctor.univ}
-              </div>
+              {this.props.doctor?.univ && (
+                <div style={styles.underLine}>
+                  Depelome faculte de {this.props.doctor.univ}
+                </div>
+              )}
             </div>
             <div style={{ textAlign: "right" }}>
               <div>
@@ -147,18 +149,17 @@ export default class ComponentToPrint extends React.Component {
                     <div>{m.medicament_prescription.posologie}</div>
                   </div>
                   <div>
-                    <strong>
-                      [{m.medicament_prescription.number_unit}]
-                    </strong>
+                    <strong>[{m.medicament_prescription.number_unit}]</strong>
                   </div>
-                  <div style={{flex: 2, textAlign: "right" }}>
+                  <div style={{ flex: 2, textAlign: "right" }}>
                     <span>{m.medicament_prescription.mention}</span>
                   </div>
                 </div>
               ))}
             <div style={styles.nbMedicaments}>
               Nombers des médicaments:{" "}
-              {this.props.medicaments_prescription && this.props.medicaments_prescription.length}
+              {this.props.medicaments_prescription &&
+                this.props.medicaments_prescription.length}
             </div>
           </div>
           <div style={styles.prescription}>

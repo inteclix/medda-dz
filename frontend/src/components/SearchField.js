@@ -44,20 +44,11 @@ export default ({
 
   return (
     <Autocomplete
-      open={open}
       defaultValue={defaultValue}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
       includeInputInList
       options={options}
       loading={loading}
       onInputChange={(event, newInputValue) => {
-        console.log(newInputValue);
-        //setInputValue(newInputValue);
         searchValue(newInputValue)
       }}
       renderInput={(params) => (

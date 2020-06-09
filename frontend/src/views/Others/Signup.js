@@ -1,4 +1,6 @@
 import React from "react";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
 import { Link as LinkRouter, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -10,11 +12,16 @@ import {
   Typography,
   Button,
   Link,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  FormHelperText,
 } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import { renderField } from "components/FormFields";
+import SearchField from "components/SearchField";
 
 import { useAppStore } from "stores";
 
@@ -60,31 +67,6 @@ export default () => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const [specialities, setSpecialities] = React.useState([]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    api
-      .get("/specialities")
-      .then(({ data }) => {
-        if (mounted) {
-          const spes = data.map((s) => {
-            return { label: s.label, value: s.id };
-          });
-          setSpecialities(spes);
-        }
-      })
-      .catch((err) => {
-        const message = err?.response?.data?.message || "" + err;
-        enqueueSnackbar(message, {
-          variant: "error",
-        });
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const onSubmit = (data) => {
     api
       .post("/auth/signup", { ...data, is: "doctor" })
@@ -107,34 +89,38 @@ export default () => {
 
   const signupForm = [
     {
-      name: "specialityId",
-      placeholder: "Choisé votre specialité",
-      type: "select",
-      options: specialities,
-      rules: { required: "This field is required" },
-      style: { width: "100%" },
-    },
-    {
       name: "mobile",
       placeholder: "Tel mobile",
       type: "text",
-      rules: { required: "This field is required" },
+      rules: {
+        required: "Ce champ est requis",
+        pattern: {
+          value: /^(00213|\+213|0)(5|6|7)[0-9]{8}$/,
+          message: "Némero de TEL incorecte",
+        },
+      },
       style: { width: "100%" },
     },
     {
       name: "username",
       placeholder: "Nom d'utilisateur",
       type: "text",
-      rules: { required: "This field is required" },
+      rules: { required: "Ce champ est requis" },
     },
     {
       name: "password",
       placeholder: "Mot de pass",
       type: "password",
-      rules: { required: "This field is required" },
+      rules: { required: "Ce champ est requis" },
     },
   ];
 
+  hookForm.register(
+    { name: "specialityId" },
+    {
+      required: "Ce champ est requis",
+    }
+  );
   return (
     <Grid container style={{ height: "100vh" }}>
       <Hidden xsDown>
@@ -154,7 +140,14 @@ export default () => {
           </Typography>
         </Grid>
       </Hidden>
-      <Grid item xs={12} sm={5} md={4} className={classes.right} component={PerfectScrollbar}>
+      <Grid
+        item
+        xs={12}
+        sm={5}
+        md={4}
+        className={classes.right}
+        component={PerfectScrollbar}
+      >
         <Box display="flex" alignItems="center" justifyContent="center">
           <img
             className={classes.authenticationImage}
@@ -162,9 +155,32 @@ export default () => {
           />
         </Box>
         <Paper style={{ padding: 8, marginTop: 8 }} component="form">
+          <FormControl
+            margin="normal"
+            fullWidth
+            error={Boolean(hookForm.errors["specialityId"])}
+          >
+            <SearchField
+              url="specialities"
+              optionLabel="label"
+              textFieldProps={{
+                placeholder: "Choisé votre specialité",
+                required: true,
+              }}
+              getOptionLabel={(option) => (option.label ? option.label : "")}
+              onChange={(event, value) => {
+                hookForm.setValue("specialityId", value?.id);
+              }}
+            />
+            <FormHelperText>
+              {hookForm.errors["specialityId"] &&
+                hookForm.errors["specialityId"].message}
+            </FormHelperText>
+          </FormControl>
           {signupForm.map((field, index) =>
             renderField(field, hookForm, index)
           )}
+
           <Button
             onClick={hookForm.handleSubmit(onSubmit)}
             style={{ width: "100%" }}
