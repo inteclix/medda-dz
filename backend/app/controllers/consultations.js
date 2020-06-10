@@ -146,8 +146,12 @@ exports.updateById = async (req, res) => {
       .send({ message: "not updated medicament_prescription" });
   }
 
-  return res.status(200).send({ message: "consultation updated"});
+  return res.status(200).send({ message: "consultation updated" });
 };
+
+exports.uploadImages = async (req, res) => {
+  
+}
 
 exports.deleteById = async (req, res) => {
   const consultation = await db.consultation.findByPk(req.params.id);
