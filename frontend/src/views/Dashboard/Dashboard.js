@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as LinkRouter } from "react-router-dom";
+import { Link as LinkRouter, useLocation, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -25,6 +25,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { useSnackbar } from "notistack";
 
 import Navigator from "containers/dashboard/Navigator";
 import Copyright from "containers/Copyright";
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props) => {
   const classes = useStyles();
+  const location = useLocation();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user, setToken } = useAppStore();
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
@@ -74,6 +78,13 @@ export default (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  if(location.pathname !=="/me" && (!user.email || !user?.doctor?.clinic?.mobile)){
+    history.replace("/me")
+    enqueueSnackbar("Completé votre informations pour continue utilse medda", {
+      variant: "success",
+    });
+  }
 
   return (
     <div className={classes.root}>

@@ -98,7 +98,7 @@ export default class ComponentToPrint extends React.Component {
           <div style={styles.pageHeader}>
             <div>
               <div>{this.props.doctor.fullName}</div>
-              <div>{this.props.doctor.speciality.name}</div>
+              <div>{this.props.doctor.speciality.label}</div>
               {this.props.doctor?.univ && (
                 <div style={styles.underLine}>
                   Depelome faculte de {this.props.doctor.univ}

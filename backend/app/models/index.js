@@ -44,6 +44,7 @@ db.appointment = require("./appointment")(sequelize, Sequelize);
 db.clinic = require("./clinic")(sequelize, Sequelize);
 db.consultation_health_parameter = require("./consultation_health_parameter")(sequelize, Sequelize);
 db.consultation = require("./consultation")(sequelize, Sequelize);
+db.consultation_images = require("./consultation_images")(sequelize, Sequelize);
 db.doctor = require("./doctor")(sequelize, Sequelize);
 db.health_parameter_category = require("./health_parameter_category")(sequelize, Sequelize);
 db.health_parameter_option = require("./health_parameter_option")(sequelize, Sequelize);

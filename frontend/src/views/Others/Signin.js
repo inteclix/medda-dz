@@ -59,31 +59,6 @@ export default () => {
   const hookForm = useForm();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [specialities, setSpecialities] = React.useState([]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    api
-      .get("/specialities")
-      .then(({ data }) => {
-        if (mounted) {
-          const spes = data.map((s) => {
-            return { label: s.name, value: s.id };
-          });
-          setSpecialities(spes);
-        }
-      })
-      .catch((err) => {
-        const message = err?.response?.data?.message || "" + err;
-        enqueueSnackbar(message, {
-          variant: "error",
-        });
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const onSubmit = (data) => {
     api
       .post("auth/signin", data)

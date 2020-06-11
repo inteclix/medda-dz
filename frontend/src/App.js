@@ -17,7 +17,7 @@ import theme from "./theme";
 const AppContainer = ({ children }) => (
   <ThemeProvider theme={theme}>
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <SnackbarProvider maxSnack={3}>
+      <SnackbarProvider maxSnack={1}>
         <BrowserRouter>
           <ScrollToTopOnLocationChange>{children}</ScrollToTopOnLocationChange>
         </BrowserRouter>
