@@ -5,6 +5,7 @@ import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import {DropzoneArea} from "material-ui-dropzone"
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -669,6 +670,23 @@ export default () => {
     );
   };
 
+  const renderDocuments = () => {
+    return (
+      <Paper
+        style={{ display: tabValue === 3 ? "" : "none" }}
+        className={classes.tabPanel}
+      >
+        <DropzoneArea
+          acceptedFiles={["image/*"]}
+          dropzoneText={"Faites glisser et déposez une image ici ou cliquez sur"}
+          onChange={(files) => console.log("Files:", files)}
+          maxFileSize={1024000}
+          filesLimit={1}
+        />
+        <Button>ff</Button>
+      </Paper>
+    );
+  };
   return (
     <ContainerWithBack
       goBack={() => {
@@ -684,6 +702,7 @@ export default () => {
           <Tab textColor="inherit" label="Consultation" />
           <Tab textColor="inherit" label="Parametre de santé" />
           <Tab textColor="inherit" label="Ordonnance" />
+          {consultation && <Tab textColor="inherit" label="Documents" />}
         </Tabs>
       )}
       title={
@@ -707,6 +726,7 @@ export default () => {
           {renderConsultation()}
           {renderHealthParameters()}
           {renderPrescription()}
+          {consultation && renderDocuments()}
           <div style={{ display: "none" }}>
             <PrintPrescription
               ref={printPrescription}
