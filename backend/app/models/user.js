@@ -29,6 +29,9 @@ module.exports = (sequelize, Sequelize) => {
     placeBirth: {
       type: Sequelize.STRING,
     },
+    address: {
+      type: Sequelize.STRING,
+    },
     tel: {
       type: Sequelize.STRING,
     },

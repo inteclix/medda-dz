@@ -15,6 +15,10 @@ import {
   Tabs,
   Tab,
   Typography,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  FormHelperText,
 } from "@material-ui/core";
 import SearchField from "components/SearchField";
 import { renderField } from "components/FormFields";
@@ -150,12 +154,11 @@ export default (props) => {
       defaultValue: me ? me.civilState : "single",
     },
     {
-      name: "speciality",
-      placeholder: "Specialité",
-      type: "select",
-      options: specialities,
+      name: "address",
+      placeholder: "Adress",
+      type: "text",
       rules: { required: "Ce champ est obligatoire" },
-      defaultValue: me ? (me.doctor ? me.doctor.specialityId : "") : "",
+      defaultValue: me ? me.address : "",
     },
   ];
 
@@ -242,11 +245,17 @@ export default (props) => {
   };
 
   const renderMe = () => {
-    hookForm.register("codePostalId");
+    hookForm.register(
+      { name: "codePostalId" },
+      {
+        required: "Ce champ est requis",
+      }
+    );
+    hookForm.setValue("codePostalId", me?.code_postal?.id);
     return (
       <Grid container spacing={1}>
         {meForm.map((field, index) => {
-          if (field.name === "specialityId" && me.is === "doctor") {
+          if (field.label === "specialityId" && me.is === "doctor") {
             return null;
           }
           return (
@@ -255,46 +264,58 @@ export default (props) => {
             </Grid>
           );
         })}
+
         <Grid item xs={12} md={6}>
-          <SearchField
-            url="codepostals"
-            optionLabel="codePostal"
-            textFieldProps={{
-              placeholder: "Code postal",
-              label: "Code postal",
-            }}
-            getOptionLabel={(option) =>
-              option.codePostal ? option.codePostal : ""
-            }
-            onChange={(event, value) => {
-              value && hookForm.setValue("codePostalId", value.id);
-            }}
-            defaultValue={me?.code_postal}
-            renderOption={(option, inputValue) => {
-              const matches = match(
-                option.codePostal,
-                inputValue.inputValue.toUpperCase()
-              );
-              const parts = parse(option.codePostal, matches);
-              return (
-                <Box flexDirection="column">
-                  <Typography>
-                    {parts.map((part, index) => (
-                      <span
-                        key={index}
-                        style={{ fontWeight: part.highlight ? 700 : 400 }}
-                      >
-                        {part.text}
-                      </span>
-                    ))}
-                  </Typography>
-                  <Typography>
-                    {option.label + " - " + option.wilaya}
-                  </Typography>
-                </Box>
-              );
-            }}
-          />
+          <FormControl
+            margin="normal"
+            fullWidth
+            error={Boolean(hookForm.errors["codePostalId"])}
+          >
+            <SearchField
+              url="codepostals"
+              optionLabel="codePostal"
+              textFieldProps={{
+                placeholder: "Code postal",
+                label: "Code postal",
+                required: true,
+              }}
+              getOptionLabel={(option) =>
+                option.codePostal ? option.codePostal : ""
+              }
+              onChange={(event, value) => {
+                hookForm.setValue("codePostalId", value?.id);
+              }}
+              defaultValue={me?.code_postal}
+              renderOption={(option, inputValue) => {
+                const matches = match(
+                  option.codePostal,
+                  inputValue.inputValue.toUpperCase()
+                );
+                const parts = parse(option.codePostal, matches);
+                return (
+                  <Box flexDirection="column">
+                    <Typography>
+                      {parts.map((part, index) => (
+                        <span
+                          key={index}
+                          style={{ fontWeight: part.highlight ? 700 : 400 }}
+                        >
+                          {part.text}
+                        </span>
+                      ))}
+                    </Typography>
+                    <Typography>
+                      {option.label + " - " + option.wilaya}
+                    </Typography>
+                  </Box>
+                );
+              }}
+            />
+            <FormHelperText>
+              {hookForm.errors["codePostalId"] &&
+                hookForm.errors["codePostalId"].message}
+            </FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item xs={12} md={12}>
           <Divider />
@@ -314,7 +335,13 @@ export default (props) => {
   };
 
   const renderClinic = () => {
-    hookForm.register("codePostalId");
+    hookForm.register(
+      { name: "codePostalId" },
+      {
+        required: "Ce champ est requis",
+      }
+    );
+    hookForm.setValue("codePostalId", me?.doctor?.clinic?.code_postal?.id);
     return (
       <Grid container spacing={1}>
         {clinicForm.map((field, index) => {
@@ -328,44 +355,56 @@ export default (props) => {
           );
         })}
         <Grid item xs={12} md={6}>
-          <SearchField
-            url="codepostals"
-            optionLabel="codePostal"
-            textFieldProps={{
-              placeholder: "Code postal",
-            }}
-            getOptionLabel={(option) =>
-              option.codePostal ? option.codePostal : ""
-            }
-            defaultValue={me?.doctor?.clinic?.code_postal}
-            onChange={(event, value) => {
-              value && hookForm.setValue("codePostalId", value.id);
-            }}
-            renderOption={(option, inputValue) => {
-              const matches = match(
-                option.codePostal,
-                inputValue.inputValue.toUpperCase()
-              );
-              const parts = parse(option.codePostal, matches);
-              return (
-                <Box flexDirection="column">
-                  <Typography>
-                    {parts.map((part, index) => (
-                      <span
-                        key={index}
-                        style={{ fontWeight: part.highlight ? 700 : 400 }}
-                      >
-                        {part.text}
-                      </span>
-                    ))}
-                  </Typography>
-                  <Typography>
-                    {option.label + " - " + option.wilaya}
-                  </Typography>
-                </Box>
-              );
-            }}
-          />
+        <FormControl
+            margin="normal"
+            fullWidth
+            error={Boolean(hookForm.errors["codePostalId"])}
+          >
+            <SearchField
+              url="codepostals"
+              optionLabel="codePostal"
+              textFieldProps={{
+                placeholder: "Code postal",
+                label: "Code postal",
+                required: true,
+              }}
+              getOptionLabel={(option) =>
+                option.codePostal ? option.codePostal : ""
+              }
+              onChange={(event, value) => {
+                hookForm.setValue("codePostalId", value?.id);
+              }}
+              defaultValue={me?.doctor?.clinic?.code_postal}
+              renderOption={(option, inputValue) => {
+                const matches = match(
+                  option.codePostal,
+                  inputValue.inputValue.toUpperCase()
+                );
+                const parts = parse(option.codePostal, matches);
+                return (
+                  <Box flexDirection="column">
+                    <Typography>
+                      {parts.map((part, index) => (
+                        <span
+                          key={index}
+                          style={{ fontWeight: part.highlight ? 700 : 400 }}
+                        >
+                          {part.text}
+                        </span>
+                      ))}
+                    </Typography>
+                    <Typography>
+                      {option.label + " - " + option.wilaya}
+                    </Typography>
+                  </Box>
+                );
+              }}
+            />
+            <FormHelperText>
+              {hookForm.errors["codePostalId"] &&
+                hookForm.errors["codePostalId"].message}
+            </FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item xs={12} md={12}>
           <Divider />
