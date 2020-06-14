@@ -25,7 +25,7 @@ import {
   CardActionArea,
   CardMedia,
   CardContent,
-  CardActions
+  CardActions,
 } from "@material-ui/core";
 
 import HelpIcon from "@material-ui/icons/Help";
@@ -77,11 +77,10 @@ const ConsultationImage = ({ image }) => {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card>
-        <CardMedia style={{ height: 240 }} component="img" image={imageUrl} />
+        <CardActionArea>
+          <CardMedia style={{ height: 240 }} component="img" image={imageUrl} />
+        </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Voire la photo
-          </Button>
           <Button size="small" color="secondary">
             Supprimer
           </Button>
@@ -720,7 +719,11 @@ export default () => {
             maxFileSize={1024000}
             filesLimit={1}
           />
+          <Box padding={1} marginBottom={2} borderBottom="1px solid lightgray" display="flex" alignItems="center" justifyContent="center">
           <Button
+            variant="contained"
+            disabled={file ? false:true}
+            color="primary"
             onClick={() => {
               if (file) {
                 const fm = new FormData();
@@ -744,9 +747,10 @@ export default () => {
               }
             }}
           >
-            ff
+            Sauvgarder la photo sélectioné
           </Button>
-          <Grid xs={12} container>
+          </Box>
+          <Grid xs={12} spacing={1} container>
             {consultation.consultation_images.map((image) => (
               <ConsultationImage image={image} key={image.id} />
             ))}
