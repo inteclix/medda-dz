@@ -29,6 +29,9 @@ exports.getConsultationById = async (req, res) => {
         include: db.medicament,
       },
       {
+        model: db.consultation_images,
+      },
+      {
         model: db.patient,
         include: db.user,
       },

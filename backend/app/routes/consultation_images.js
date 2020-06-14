@@ -4,9 +4,15 @@ module.exports = (router, controller, middleware) => {
     [
       middleware.jwt.verifyToken,
       middleware.permissions.isDoctor,
-      middleware.upload.single("uploadfile"),
+      middleware.upload.single("file"),
     ],
     controller.uploadImage
+  );
+
+  router.get(
+    "/:id",
+    [middleware.jwt.verifyToken, middleware.permissions.isDoctor],
+    controller.getImage
   );
 
   router.get(

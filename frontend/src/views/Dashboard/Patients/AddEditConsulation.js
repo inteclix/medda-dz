@@ -5,7 +5,7 @@ import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
-import {DropzoneArea} from "material-ui-dropzone"
+import { DropzoneArea } from "material-ui-dropzone";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -21,6 +21,11 @@ import {
   AppBar,
   Toolbar,
   LinearProgress,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  CardActions
 } from "@material-ui/core";
 
 import HelpIcon from "@material-ui/icons/Help";
@@ -64,6 +69,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ConsultationImage = ({ image }) => {
+  var arrayBufferView = new Uint8Array(image.data.data);
+  var urlCreator = window.URL || window.webkitURL;
+  var blob = new Blob([arrayBufferView], { type: image.type });
+  var imageUrl = urlCreator.createObjectURL(blob);
+  return (
+    <Grid item xs={12} sm={6} md={4}>
+      <Card>
+        <CardMedia style={{ height: 240 }} component="img" image={imageUrl} />
+        <CardActions>
+          <Button size="small" color="primary">
+            Voire la photo
+          </Button>
+          <Button size="small" color="secondary">
+            Supprimer
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
+  );
+};
+
 export default () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -71,7 +98,7 @@ export default () => {
   window.hookForm = hookForm;
   const [formValues, setFormValues] = React.useState(hookForm.getValues());
   window.formValues = formValues;
-
+  const [file, setFile] = React.useState(null);
   const { api, user } = useAppStore();
 
   const [tabValue, setTabValue] = React.useState(0);
@@ -94,25 +121,29 @@ export default () => {
   const { params } = useRouteMatch();
   const history = useHistory();
 
+  const getConsultation = React.useCallback(async () => {
+    await api
+      .get(`/consultations/${params.consultationId}`)
+      .then(({ data }) => {
+        setConsultation(data); // on edit route
+        setPatient(data.patient);
+        setMedicaments_prescription(data.prescription.medicaments);
+        setHealthParameters(data.health_parameters);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        const message = err?.response?.data?.message || "" + err;
+        enqueueSnackbar(message, {
+          variant: "error",
+        });
+        setIsLoading(false);
+      });
+  });
+
   React.useEffect(() => {
     const load = async () => {
       if (params.consultationId) {
-        await api
-          .get(`/consultations/${params.consultationId}`)
-          .then(({ data }) => {
-            setConsultation(data); // on edit route
-            setPatient(data.patient);
-            setMedicaments_prescription(data.prescription.medicaments);
-            setHealthParameters(data.health_parameters);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            const message = err?.response?.data?.message || "" + err;
-            enqueueSnackbar(message, {
-              variant: "error",
-            });
-            setIsLoading(false);
-          });
+        getConsultation();
       } else {
         await api
           .get(`/patients/${params.id}`)
@@ -671,19 +702,56 @@ export default () => {
   };
 
   const renderDocuments = () => {
+    const loading = true;
+
     return (
       <Paper
         style={{ display: tabValue === 3 ? "" : "none" }}
         className={classes.tabPanel}
+        padding={1}
       >
-        <DropzoneArea
-          acceptedFiles={["image/*"]}
-          dropzoneText={"Faites glisser et déposez une image ici ou cliquez sur"}
-          onChange={(files) => console.log("Files:", files)}
-          maxFileSize={1024000}
-          filesLimit={1}
-        />
-        <Button>ff</Button>
+        <Box padding={1}>
+          <DropzoneArea
+            acceptedFiles={["image/*"]}
+            dropzoneText={
+              "Faites glisser et déposez une image ici ou cliquez sur"
+            }
+            onChange={(files) => setFile(files.lenght !== 0 ? files[0] : null)}
+            maxFileSize={1024000}
+            filesLimit={1}
+          />
+          <Button
+            onClick={() => {
+              if (file) {
+                const fm = new FormData();
+                fm.set("consultationId", consultation.id);
+                fm.append("file", file);
+                api
+                  .post("consultation_images", fm)
+                  .then(({ data }) => {
+                    const message = "Image est enregister avec success";
+                    enqueueSnackbar(message, {
+                      variant: "success",
+                    });
+                    getConsultation();
+                  })
+                  .catch((err) => {
+                    const message = err?.response?.data?.message || "" + err;
+                    enqueueSnackbar(message, {
+                      variant: "error",
+                    });
+                  });
+              }
+            }}
+          >
+            ff
+          </Button>
+          <Grid xs={12} container>
+            {consultation.consultation_images.map((image) => (
+              <ConsultationImage image={image} key={image.id} />
+            ))}
+          </Grid>
+        </Box>
       </Paper>
     );
   };

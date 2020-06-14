@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   main: {},
   footer: {
     padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
     background: "#eaeff1",
   },
 }));
