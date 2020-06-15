@@ -6,6 +6,7 @@ import { useReactToPrint } from "react-to-print";
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 import { DropzoneArea } from "material-ui-dropzone";
+import fileDownload from "js-file-download";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -69,7 +70,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ConsultationImage = ({ image }) => {
+const ConsultationImage = ({ image, getConsultation }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const { api } = useAppStore();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   var arrayBufferView = new Uint8Array(image.data.data);
   var urlCreator = window.URL || window.webkitURL;
   var blob = new Blob([arrayBufferView], { type: image.type });
@@ -81,8 +86,39 @@ const ConsultationImage = ({ image }) => {
           <CardMedia style={{ height: 240 }} component="img" image={imageUrl} />
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="secondary">
+          <Button
+            disabled={isSubmitting}
+            onClick={() => {
+              setIsSubmitting(true);
+              api
+                .delete(`consultation_images/${image.id}`)
+                .then(({ data }) => {
+                  const message = "Consultation est supprimer";
+                  enqueueSnackbar(message, {
+                    variant: "success",
+                  });
+                  setIsSubmitting(false);
+                  getConsultation();
+                })
+                .catch((err) => {
+                  const message = err?.response?.data?.message || "" + err;
+                  enqueueSnackbar(message, {
+                    variant: "error",
+                  });
+                  setIsSubmitting(false);
+                });
+            }}
+            size="small"
+            color="secondary"
+          >
             Supprimer
+          </Button>
+          <Button
+            disabled={true}
+            size="small"
+            color="primary"
+          >
+            Telecharger
           </Button>
         </CardActions>
       </Card>
@@ -719,40 +755,52 @@ export default () => {
             maxFileSize={1024000}
             filesLimit={1}
           />
-          <Box padding={1} marginBottom={2} borderBottom="1px solid lightgray" display="flex" alignItems="center" justifyContent="center">
-          <Button
-            variant="contained"
-            disabled={file ? false:true}
-            color="primary"
-            onClick={() => {
-              if (file) {
-                const fm = new FormData();
-                fm.set("consultationId", consultation.id);
-                fm.append("file", file);
-                api
-                  .post("consultation_images", fm)
-                  .then(({ data }) => {
-                    const message = "Image est enregister avec success";
-                    enqueueSnackbar(message, {
-                      variant: "success",
-                    });
-                    getConsultation();
-                  })
-                  .catch((err) => {
-                    const message = err?.response?.data?.message || "" + err;
-                    enqueueSnackbar(message, {
-                      variant: "error",
-                    });
-                  });
-              }
-            }}
+          <Box
+            padding={1}
+            marginBottom={2}
+            borderBottom="1px solid lightgray"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
           >
-            Sauvgarder la photo sélectioné
-          </Button>
+            <Button
+              variant="contained"
+              disabled={file ? false : true}
+              color="primary"
+              onClick={() => {
+                if (file) {
+                  const fm = new FormData();
+                  fm.set("consultationId", consultation.id);
+                  fm.append("file", file);
+                  api
+                    .post("consultation_images", fm)
+                    .then(({ data }) => {
+                      const message = "Image est enregiste";
+                      enqueueSnackbar(message, {
+                        variant: "success",
+                      });
+                      setFile(null);
+                      getConsultation();
+                    })
+                    .catch((err) => {
+                      const message = err?.response?.data?.message || "" + err;
+                      enqueueSnackbar(message, {
+                        variant: "error",
+                      });
+                    });
+                }
+              }}
+            >
+              Sauvgarder la photo sélectioné
+            </Button>
           </Box>
-          <Grid xs={12} spacing={1} container>
+          <Grid spacing={1} container>
             {consultation.consultation_images.map((image) => (
-              <ConsultationImage image={image} key={image.id} />
+              <ConsultationImage
+                image={image}
+                getConsultation={getConsultation}
+                key={image.id}
+              />
             ))}
           </Grid>
         </Box>

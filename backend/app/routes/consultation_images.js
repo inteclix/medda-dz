@@ -12,13 +12,20 @@ module.exports = (router, controller, middleware) => {
   router.get(
     "/:id",
     [middleware.jwt.verifyToken, middleware.permissions.isDoctor],
-    controller.getImage
+    controller.getById
+  );
+
+  router.delete(
+    "/:id",
+    [middleware.jwt.verifyToken, middleware.permissions.isDoctor],
+    controller.deleteById
   );
 
   router.get(
     "/download/:id",
     [middleware.jwt.verifyToken, middleware.permissions.isDoctor],
-    controller.downloadImage
+    controller.downloadById
   );
+
   return router;
 };

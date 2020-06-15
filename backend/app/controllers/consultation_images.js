@@ -18,16 +18,16 @@ exports.uploadImage = (req, res) => {
     });
 };
 
-exports.getImage = (req, res) => {
-  const image = Image.findById(req.params.id);
+exports.getById = (req, res) => {
+  const image = Image.findByPk(req.params.id);
   if (!image) {
     return res.status(404).send({ message: "Not found" });
   }
   return res.status(200).send(image);
 };
 
-exports.downloadImage = (req, res) => {
-  Image.findById(req.params.id).then((file) => {
+exports.downloadById = (req, res) => {
+  Image.findByPk(req.params.id).then((file) => {
     var fileContents = Buffer.from(file.data, "base64");
     var readStream = new stream.PassThrough();
     readStream.end(fileContents);
@@ -37,4 +37,21 @@ exports.downloadImage = (req, res) => {
 
     readStream.pipe(res);
   });
+};
+
+
+exports.deleteById = async (req, res) => {
+  console.log("params", req.params)
+  const consultation_image = await db.consultation_images.findByPk(req.params.id);
+  if (!consultation_image) {
+    return res.status(404).send({ message: "Not found" });
+  }
+  await consultation_image
+    .destroy()
+    .then(() => {
+      return res.status(203).send({ message: "consultation removed" });
+    })
+    .catch(() => {
+      return res.status(500).send({ message: "error when removed" });
+    });
 };
