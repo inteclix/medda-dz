@@ -12,6 +12,10 @@ app.use(express.static(path.join(__dirname, "static")));
 // loading api routes
 require("./app/routes")(app)
 
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "static", "index.html"));
+ });
+
 // set port, listen for requests
 const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {
