@@ -5,6 +5,7 @@ import DashboardHome from "views/Dashboard/DashboardHome";
 import Me from "views/Dashboard/Me";
 import Settings from "views/Dashboard/Settings";
 import Patients from "views/Dashboard/Patients";
+import Accounts from "views/Dashboard/Accounts"
 import Appointments from "views/Dashboard/Appointments";
 
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
   {
     component: Patients,
     path: "/patients",
+    exact: false,
+  },
+  {
+    component: Accounts,
+    path: "/Accounts",
     exact: false,
   },
   {

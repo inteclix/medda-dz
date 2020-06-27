@@ -95,7 +95,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
   },
   footer: {
-    height: 320,
     padding: theme.spacing(4),
     background: "linear-gradient(to top, #e6e8f9 0%, #f4f6f8)",
     boxShadow: "5px 0px 25px 0px #0000007d",
@@ -164,6 +163,10 @@ export default () => {
         <Typography style={{ textAlign: "center" }}>
         {"</>"} (developed) with ❤ by{" "}
           <Link color="inherit" href="https://twitter.com/seddikBENZEMAME" target="_blank">@seddikBENZEMAME</Link>
+        </Typography>
+        <Typography variant="body2" style={{ textAlign: "center" }}>
+        Pour plus d'informations TEL: 
+          <Link color="inherit" href="tel:+213540055010" >+213540055010</Link>
         </Typography>
         <Copyright />
       </Box>

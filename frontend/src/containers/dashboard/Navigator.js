@@ -19,6 +19,7 @@ import SettingsInputComponentIcon from "@material-ui/icons/SettingsInputComponen
 import TimerIcon from "@material-ui/icons/Timer";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PhonelinkSetupIcon from "@material-ui/icons/PhonelinkSetup";
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +98,13 @@ function Navigator(props) {
           icon: <PersonIcon />,
           to: "/me",
           active: location.pathname.startsWith("/me"),
-        },,
+        },
+        {
+          id: "Sous comptes",
+          icon: <SupervisedUserCircleIcon />,
+          to: "/accounts",
+          active: location.pathname.startsWith("/accounts"),
+        },
         {
           id: "Parametres",
           icon: <SettingsIcon />,
